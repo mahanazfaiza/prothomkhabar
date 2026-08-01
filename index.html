@@ -4721,63 +4721,79 @@ const Shopping = (function(){
   /* ---- Retailer directory (module 8) ---------------------------------
      Links are kept in this single array so they are trivial to update:
      edit the `url` field and nothing else changes. --------------------- */
+  /* ---- Retailer directory -------------------------------------------
+     Every entry below was fetched and checked on the date in VERIFIED, and
+     every one of them actually sells baby food, feeding cutlery or feeding
+     gear. Retailers removed, and why:
+
+       babyshopbd.com   domain expired, parked for sale
+       lokkhishona.com  HTTP 500, site down
+       motherlandbd.com no DNS response
+       priyoshop.com    alive but pivoted to B2B wholesale
+       pickaboo.com     alive, but electronics only, no feeding gear
+       shop.shajgoj.com alive, but baby skincare only, no feeding gear
+
+     A shop that is alive but sells the wrong thing wastes a caregiver's time
+     just as effectively as a dead link, so both count as removal grounds.
+
+     Links rot. That is why the list is short, why the checked date is shown
+     in the app, and why build/check-links.js exists to re-test them. */
+
+  const VERIFIED = '2026-08-01';
+
   const SITES = [
     { id:'monowa', short:'MM', url:'https://monowamart.com',
       name:{bn:'Monowa Mart',en:'Monowa Mart'},
-      types:{bn:'বেবি ফিডিং গিয়ার, সিলিকন বিব ও বাটি, হাইচেয়ার',en:'Baby feeding gear, silicone bibs and bowls, high chairs'},
+      types:{bn:'সম্পূর্ণ বেবি শপ — ফিডিং, বেবি গিয়ার (হাইচেয়ার, বুস্টার), নার্সিং, পোশাক, খেলনা',
+             en:'A full baby shop — feeding, baby gear including high chairs and boosters, nursing, clothing, toys'},
       price:{bn:'৳৳ মাঝারি',en:'৳৳ Mid-range'},
-      strength:{bn:'ফিডিং পণ্যে ভালো বাছাই, বাংলায় সহায়তা, ঢাকায় দ্রুত ডেলিভারি',en:'Good curation of feeding products, Bangla support, fast Dhaka delivery'},
-      weakness:{bn:'ঢাকার বাইরে ডেলিভারি ধীর, স্টক সীমিত হতে পারে',en:'Slower delivery outside Dhaka, stock can be limited'},
-      best:{bn:'প্রথমবার BLW-এর মূল জিনিসপত্র একসাথে কেনার জন্য',en:'Buying a first set of core BLW essentials in one order'} },
-    { id:'lokkhishona', short:'LS', url:'https://lokkhishona.com',
-      name:{bn:'Lokkhishona',en:'Lokkhishona'},
-      types:{bn:'বেবি কেয়ার, ফিডিং আইটেম, খেলনা, মা ও শিশুর পণ্য',en:'Baby care, feeding items, toys, mother and baby products'},
-      price:{bn:'৳৳ মাঝারি',en:'৳৳ Mid-range'},
-      strength:{bn:'দেশি ব্র্যান্ড, ফেসবুকে সক্রিয় সাপোর্ট, নিয়মিত অফার',en:'Local brand, responsive Facebook support, regular offers'},
-      weakness:{bn:'সব পণ্যের বিস্তারিত স্পেসিফিকেশন থাকে না',en:'Product specifications are not always complete'},
-      best:{bn:'দৈনন্দিন বেবি কেয়ার ও ফিডিং পণ্য',en:'Everyday baby care and feeding products'} },
-    { id:'motherland', short:'ML', url:'https://motherlandbd.com',
-      name:{bn:'Motherland BD',en:'Motherland BD'},
-      types:{bn:'মা ও শিশুর সব ধরনের পণ্য, ফিডিং, স্বাস্থ্য',en:'Full mother and baby range, feeding, health'},
-      price:{bn:'৳৳ - ৳৳৳ মাঝারি থেকে প্রিমিয়াম',en:'৳৳ to ৳৳৳ mid to premium'},
-      strength:{bn:'বিস্তৃত পণ্যের তালিকা, আন্তর্জাতিক ব্র্যান্ড পাওয়া যায়',en:'Broad catalogue including international brands'},
-      weakness:{bn:'দাম তুলনামূলক বেশি হতে পারে',en:'Prices can run higher than local sellers'},
-      best:{bn:'নির্দিষ্ট আন্তর্জাতিক ব্র্যান্ড খুঁজলে',en:'Hunting for a specific international brand'} },
-    { id:'babyshopbd', short:'BS', url:'https://babyshopbd.com',
-      name:{bn:'Baby Shop BD',en:'Baby Shop BD'},
-      types:{bn:'ফিডিং, ডায়াপার, পোশাক, খেলনা',en:'Feeding, nappies, clothing, toys'},
-      price:{bn:'৳ - ৳৳ সাশ্রয়ী থেকে মাঝারি',en:'৳ to ৳৳ budget to mid'},
-      strength:{bn:'সাশ্রয়ী দাম, নিয়মিত ডিসকাউন্ট',en:'Affordable pricing with frequent discounts'},
-      weakness:{bn:'মানের তারতম্য থাকতে পারে — রিভিউ দেখে কিনুন',en:'Quality varies — read reviews before buying'},
-      best:{bn:'কম বাজেটে বেসিক জিনিসপত্র',en:'Basics on a tight budget'} },
-    { id:'priyoshop', short:'PS', url:'https://www.priyoshop.com',
-      name:{bn:'PriyoShop',en:'PriyoShop'},
-      types:{bn:'সাধারণ ই-কমার্স, বেবি ও মা-শিশু বিভাগ',en:'General e-commerce with a baby and mother section'},
-      price:{bn:'৳ - ৳৳ সাশ্রয়ী থেকে মাঝারি',en:'৳ to ৳৳ budget to mid'},
-      strength:{bn:'দেশজুড়ে ডেলিভারি, ক্যাশ অন ডেলিভারি',en:'Nationwide delivery with cash on delivery'},
-      weakness:{bn:'বেবি বিভাগ বিশেষায়িত নয়, বাছাই সীমিত',en:'Baby section is not specialised and the range is limited'},
-      best:{bn:'ঢাকার বাইরে থেকে অর্ডার করলে',en:'Ordering from outside Dhaka'} },
+      strength:{bn:'এই তালিকার একমাত্র নিবেদিত বেবি শপ। ফিডিং ও গিয়ার আলাদা ক্যাটাগরিতে সাজানো, দেশজুড়ে ডেলিভারি, ফোনে অর্ডার নেওয়া হয় (০১৯৭৭৭৬৫৩৩৬)। ঢাকা নিউমার্কেটে দোকানও আছে।',
+                en:'The only dedicated baby shop on this list. Feeding and gear have their own categories, it delivers nationwide, and it takes phone orders (01977765336). There is a physical shop at Dhaka New Market.'},
+      weakness:{bn:'দাম বাজারের চেয়ে কিছুটা বেশি হতে পারে; আন্তর্জাতিক ব্র্যান্ডের দিকে ঝোঁক বেশি।',
+                en:'Prices can run above the local market, and the range leans towards imported brands.'},
+      best:{bn:'হাইচেয়ার, সিলিকন বাটি, বিব — সলিড শুরুর মূল জিনিসপত্র এক জায়গায়',
+            en:'High chairs, silicone bowls and bibs — the core starting-solids kit in one order'} },
+
     { id:'daraz', short:'DZ', url:'https://www.daraz.com.bd',
       name:{bn:'Daraz Bangladesh',en:'Daraz Bangladesh'},
-      types:{bn:'সবকিছু — হাইচেয়ার, সিলিকন সেট, স্টোরেজ, কাপ',en:'Everything — high chairs, silicone sets, storage, cups'},
-      price:{bn:'৳ - ৳৳৳ সব রেঞ্জ',en:'৳ to ৳৳৳ every range'},
-      strength:{bn:'সবচেয়ে বড় বাছাই ও সবচেয়ে প্রতিযোগিতামূলক দাম; দেশজুড়ে ডেলিভারি ও রিটার্ন সুবিধা',en:'The widest selection and most competitive prices, nationwide delivery and a returns process'},
-      weakness:{bn:'বিক্রেতাভেদে মান খুব আলাদা — শুধু "Mall" বা উচ্চ রেটিংয়ের বিক্রেতা থেকে কিনুন এবং সিলিকন পণ্যে ফুড-গ্রেড সার্টিফিকেশন যাচাই করুন',en:'Quality varies hugely by seller — buy only from Mall or highly-rated sellers and verify food-grade certification on silicone'},
+      types:{bn:'সবকিছু — হাইচেয়ার, সিলিকন সেট, স্টোরেজ বাক্স, কাপ',
+             en:'Everything — high chairs, silicone sets, storage boxes, cups'},
+      price:{bn:'৳ - ৳৳৳ সব রেঞ্জ',en:'৳ to ৳৳৳, every range'},
+      strength:{bn:'সবচেয়ে বড় বাছাই ও সবচেয়ে প্রতিযোগিতামূলক দাম; দেশজুড়ে ডেলিভারি ও রিটার্ন সুবিধা।',
+                en:'The widest selection and the most competitive prices, with nationwide delivery and a returns process.'},
+      weakness:{bn:'বিক্রেতাভেদে মান খুব আলাদা। শুধু "Mall" ব্যাজ বা উচ্চ রেটিংয়ের বিক্রেতা থেকে কিনুন, এবং সিলিকন পণ্যে food-grade লেখা আছে কিনা যাচাই করুন।',
+                en:'Quality varies hugely by seller. Buy only from Mall-badged or highly rated sellers, and check that silicone is labelled food grade.'},
       best:{bn:'দাম তুলনা করে হাইচেয়ার ও বড় জিনিস কেনা',en:'Comparing prices on high chairs and larger items'} },
-    { id:'pickaboo', short:'PB', url:'https://www.pickaboo.com',
-      name:{bn:'Pickaboo',en:'Pickaboo'},
-      types:{bn:'ইলেকট্রনিক্স ও লাইফস্টাইল, সীমিত বেবি পণ্য',en:'Electronics and lifestyle with a limited baby range'},
-      price:{bn:'৳৳ - ৳৳৳ মাঝারি থেকে প্রিমিয়াম',en:'৳৳ to ৳৳৳ mid to premium'},
-      strength:{bn:'আসল পণ্যের নিশ্চয়তা ও ওয়ারেন্টি সাপোর্ট ভালো',en:'Strong authenticity guarantee and warranty support'},
-      weakness:{bn:'ফিডিং পণ্যের বাছাই কম',en:'Small selection of feeding products'},
-      best:{bn:'স্টেরিলাইজার বা ব্লেন্ডারের মতো ইলেকট্রিক পণ্য',en:'Electrical items such as sterilisers or blenders'} },
-    { id:'shajgoj', short:'SG', url:'https://shop.shajgoj.com',
-      name:{bn:'Shajgoj',en:'Shajgoj'},
-      types:{bn:'মূলত বিউটি ও পার্সোনাল কেয়ার; শিশুর ত্বকের যত্নের পণ্য',en:'Mainly beauty and personal care, plus baby skincare'},
-      price:{bn:'৳৳ মাঝারি',en:'৳৳ Mid-range'},
-      strength:{bn:'আসল পণ্যের নিশ্চয়তা, ভালো প্যাকেজিং',en:'Authenticity assurance and good packaging'},
-      weakness:{bn:'ফিডিং গিয়ার সাধারণত পাওয়া যায় না',en:'Feeding gear is generally not stocked'},
-      best:{bn:'বাচ্চার ত্বকের যত্নের পণ্য (ফিডিং নয়)',en:'Baby skincare rather than feeding items'} },
+
+    { id:'chaldal', short:'CH', url:'https://chaldal.com/babycare',
+      name:{bn:'Chaldal',en:'Chaldal'},
+      types:{bn:'মুদি ও বেবি কেয়ার — সিরিয়াল, ফর্মুলা, ডায়াপার, কিছু ফিডিং আইটেম',
+             en:'Groceries and baby care — cereal, formula, nappies, some feeding items'},
+      price:{bn:'৳ - ৳৳ সাশ্রয়ী থেকে মাঝারি',en:'৳ to ৳৳, budget to mid'},
+      strength:{bn:'১ ঘণ্টার মধ্যে ডেলিভারি এবং পণ্য হাতে পাওয়ার পর টাকা দেওয়ার সুবিধা। রান্নার উপকরণ ও বেবি কেয়ার একসাথে অর্ডার করা যায়।',
+                en:'Delivery within about an hour and payment after the goods arrive. You can order cooking ingredients and baby care in the same basket.'},
+      weakness:{bn:'শুধু ঢাকা, চট্টগ্রাম ও যশোরে ডেলিভারি। হাইচেয়ারের মতো বড় গিয়ার সাধারণত পাওয়া যায় না।',
+                en:'Delivers only in Dhaka, Chattogram and Jashore, and does not generally stock large gear such as high chairs.'},
+      best:{bn:'দ্রুত দরকার হলে — ফর্মুলা, সিরিয়াল, ডায়াপার',en:'When you need something today: formula, cereal, nappies'} },
+
+
+  ];
+
+  /* Physical options, which cannot break the way a URL can. In Bangladesh a
+     great many parents buy in person anyway, and prices are often lower. */
+  const PLACES = [
+    { icon:'🏬', t:{bn:'ঢাকা নিউমার্কেট ও চাঁদনী চক',en:'Dhaka New Market and Chandni Chowk'},
+      d:{bn:'শিশুর জিনিসপত্রের সবচেয়ে বড় ও সস্তা বাজার। বাটি, চামচ, বিব ও হাইচেয়ার — সবই এক জায়গায়, দরদাম করা যায়।',
+         en:'The largest and cheapest market for baby goods. Bowls, spoons, bibs and high chairs all in one place, and prices are negotiable.'} },
+    { icon:'🛒', t:{bn:'সুপারশপ — স্বপ্ন, মীনা বাজার, আগোরা',en:'Supermarkets — Shwapno, Meena Bazar, Agora'},
+      d:{bn:'সিলিকন বাটি, চামচ, বিব ও স্টোরেজ বাক্স সাধারণত পাওয়া যায়। হাতে দেখে কেনার সুবিধা আছে — সিলিকন মুচড়ে সাদা দাগ পড়ে কিনা পরীক্ষা করতে পারবেন।',
+         en:'Usually stock silicone bowls, spoons, bibs and storage boxes. Buying in person lets you twist the silicone to check for filler streaks.'} },
+    { icon:'💊', t:{bn:'বড় ফার্মেসি (লাজ, তামান্না)',en:'Large pharmacies such as Lazz or Tamanna'},
+      d:{bn:'ফিডিং কাপ, চামচ ও শিশুর মাপার যন্ত্র রাখে; সাধারণত আসল পণ্য পাওয়া যায়।',
+         en:'Carry feeding cups, spoons and baby measuring items, and are generally reliable for authenticity.'} },
+    { icon:'🏠', t:{bn:'ঘরেই যা আছে',en:'What you already own'},
+      d:{bn:'ছোট স্টিলের বাটি, চা-চামচ, ছোট কাচের গ্লাস (খোলা কাপ হিসেবে) ও পুরনো নরম কাপড় (বিব হিসেবে) — সলিড শুরুর জন্য সত্যিকারের প্রয়োজনীয় জিনিসের অর্ধেকই কিনতে হয় না।',
+         en:'A small steel bowl, a teaspoon, a small glass as an open cup and an old soft cloth as a bib. Half of what is genuinely needed to start solids does not have to be bought at all.'} },
   ];
 
   function renderGear(){
@@ -4829,6 +4845,10 @@ const Shopping = (function(){
       'নিচের তালিকাটি সুবিধার জন্য দেওয়া — কোনো দোকানের সাথে এই অ্যাপের কোনো বাণিজ্যিক সম্পর্ক নেই। অনলাইনে কেনার আগে বিক্রেতার রেটিং, রিটার্ন নীতি ও পণ্যের ফুড-গ্রেড সার্টিফিকেশন যাচাই করে নিন।',
       'This list is provided for convenience — this app has no commercial relationship with any retailer. Before buying online, check the seller rating, the returns policy and food-grade certification.')}</p>`;
 
+    html += `<p class="v-small" style="margin:-8px 0 18px;">🔗 ${Util.tt(
+      'সব লিংক সর্বশেষ যাচাই করা হয়েছে ' + Util.num(VERIFIED) + ' তারিখে। কোনোটি কাজ না করলে নিচের সরাসরি দোকানগুলো দেখুন।',
+      'All links last checked on ' + VERIFIED + '. If one stops working, use the in-person options below.')}</p>`;
+
     html += '<div class="v-grid wide">';
     SITES.forEach(s => {
       html += `<div class="shop-card">
@@ -4846,6 +4866,15 @@ const Shopping = (function(){
       </div>`;
     });
     html += '</div>';
+
+    html += `<h3 style="margin:28px 0 12px;">🏬 ${Util.tt('সরাসরি যেসব জায়গা থেকে কেনা যায়','Where to buy in person')}</h3>
+      <p class="v-muted" style="max-width:70ch;margin-bottom:14px;">${Util.tt(
+        'ওয়েবসাইট বন্ধ হয়ে যায়, দোকান থাকে। বাংলাদেশে বেশিরভাগ জিনিস সরাসরি কিনলে দামও কম পড়ে এবং হাতে দেখে যাচাই করা যায়।',
+        'Websites close; shops stay. In Bangladesh most of this is cheaper bought in person anyway, and you can inspect it before paying.')}</p>
+      <div class="v-grid wide">${PLACES.map(function(p){
+        return '<div class="v-card"><h4>' + p.icon + ' ' + Util.t(p.t) + '</h4>' +
+               '<p class="v-muted" style="margin:0;">' + Util.t(p.d) + '</p></div>';
+      }).join('')}</div>`;
 
     html += Util.accordion('🛍 ' + Util.tt('অনলাইনে বেবি ফিডিং পণ্য কেনার টিপস','Tips for buying feeding gear online'),
       `<ul class="plain">
@@ -4884,7 +4913,7 @@ const Shopping = (function(){
     }
   });
 
-  return { init, show, GEAR, SITES };
+  return { init, show, GEAR, SITES, PLACES, VERIFIED };
 })();
 
 
