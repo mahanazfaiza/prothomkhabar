@@ -14,8 +14,33 @@
 <link rel="icon" href="icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&text=%E0%A7%A6%E0%A7%A7%E0%A7%A8%E0%A7%A9%E0%A7%AA%E0%A7%AB%E0%A7%AC%E0%A7%AD%E0%A7%AE%E0%A7%AF%E0%A7%B3&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+
+  /* ---------- Kalpurush for Bangla text (see build/make-bangla-font.py) ----------
+     unicode-range confines this face to the Bengali block plus the joiners and
+     danda. Latin, punctuation and symbols fall through to the original
+     families, so English mode is byte-for-byte unchanged.
+
+     Kalpurush ships a single weight. Headings asking for 600-800 get synthetic
+     bold from the browser; to keep a true display face for Bangla headings
+     instead, remove 'PK Bangla' from the h1,h2,h3,.display stack below. */
+  @font-face{
+    font-family: 'PK Bangla';
+    /* Deliberately NO local() here. 'Kalpurush ANSI' is a legacy Bijoy-encoded
+       font that maps Bengali glyphs onto Latin codepoints and has no Unicode
+       conjunct shaping -- if it is installed, প্র decomposes to পর and the
+       whole page reads as broken Bangla. Plain 'Kalpurush' is also a gamble,
+       since we cannot know which build a reader has installed. Shipping the
+       subset is the only way to make rendering deterministic for everyone;
+       if it is absent we fall back to Hind Siliguri, which shapes correctly. */
+    src: url('fonts/kalpurush-bn.woff2') format('woff2'),
+         url('fonts/kalpurush-bn.woff') format('woff');
+    unicode-range: U+0980-09FF, U+200C-200D, U+0964-0965;
+    font-weight: 400;
+    font-display: swap;
+  }
   :root{
     --paper: #FBF3E4;
     --paper-dim: #F3E8D2;
@@ -36,7 +61,7 @@
     margin:0;
     background: var(--paper);
     color: var(--ink);
-    font-family: 'Hind Siliguri', 'Work Sans', sans-serif;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', 'Work Sans', sans-serif;
     line-height: 1.6;
   }
   [lang-en]{ display:none; }
@@ -45,7 +70,7 @@
   body.en [lang-en].block{ display:block; }
 
   h1,h2,h3, .display{
-    font-family: 'Baloo Da 2', 'Work Sans', sans-serif;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2', 'Work Sans', sans-serif;
     font-weight: 700;
     color: var(--ink);
     margin: 0;
@@ -60,7 +85,7 @@
     z-index: 50;
   }
   .logo{
-    font-family:'Baloo Da 2', sans-serif;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2', sans-serif;
     font-weight:800; font-size: 1.3rem;
     color: var(--leaf);
     display:flex; align-items:center; gap:8px;
@@ -72,11 +97,11 @@
   }
   .lang-toggle{
     display:flex; border:1.5px solid var(--ink); border-radius:999px; overflow:hidden;
-    font-family:'Work Sans', sans-serif; font-size:0.82rem; font-weight:600;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans', sans-serif; font-size:0.82rem; font-weight:600;
   }
   .lang-toggle button{
     border:none; background:transparent; padding:7px 16px; cursor:pointer;
-    color: var(--ink); font-family: inherit;
+    color: var(--ink); font-family: 'PK Bangla', 'Noto Sans Bengali', inherit;
   }
   .lang-toggle button.active{ background: var(--ink); color: var(--paper); }
 
@@ -88,7 +113,7 @@
   }
   .hero h1{ font-size: clamp(2rem, 4vw, 3.1rem); line-height:1.25; }
   .hero .eyebrow{
-    font-family:'Work Sans', sans-serif; text-transform:uppercase; letter-spacing:0.14em;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans', sans-serif; text-transform:uppercase; letter-spacing:0.14em;
     font-size:0.72rem; font-weight:600; color: var(--leaf); margin-bottom:14px; display:block;
   }
   .hero p.sub{ color: var(--ink-soft); font-size:1.05rem; max-width:46ch; margin-top:16px; }
@@ -98,13 +123,13 @@
   }
   .search-row input{
     flex:1; padding:14px 18px; border-radius:14px; border:1.5px solid var(--line);
-    font-family:'Hind Siliguri', sans-serif; font-size:1rem; background: var(--card);
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; font-size:1rem; background: var(--card);
     color: var(--ink);
   }
   .search-row input:focus{ outline: 2px solid var(--mustard-deep); outline-offset:1px; }
   .search-row button{
     padding: 14px 22px; border-radius:14px; border:none; background: var(--mustard-deep);
-    color:#fff; font-weight:600; font-family:'Hind Siliguri', sans-serif; cursor:pointer; font-size:1rem;
+    color:#fff; font-weight:600; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; cursor:pointer; font-size:1rem;
   }
   .search-row button:hover{ background:#8f5f0f; }
 
@@ -127,7 +152,7 @@
   .wedge:hover{ filter:brightness(1.08); }
   .wedge.active{ filter: saturate(1.3); transform: scale(1.015); }
   .wedge span{
-    font-family:'Work Sans', sans-serif; font-weight:600; font-size:0.72rem; color:#fff;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans', sans-serif; font-weight:600; font-size:0.72rem; color:#fff;
     padding-bottom: 14%; text-shadow: 0 1px 3px rgba(0,0,0,0.25);
   }
   .thala-center{
@@ -137,7 +162,7 @@
     box-shadow: 0 4px 14px rgba(31,42,68,0.18);
     text-align:center; padding:6px;
   }
-  .thala-center .num{ font-family:'Baloo Da 2', sans-serif; font-size:1.5rem; font-weight:800; color:var(--ink); }
+  .thala-center .num{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2', sans-serif; font-size:1.5rem; font-weight:800; color:var(--ink); }
   .thala-center .lbl{ font-size:0.62rem; color:var(--ink-soft); font-weight:600; }
   .thala-caption{ font-size:0.85rem; color: var(--ink-soft); text-align:center; max-width:280px; }
 
@@ -150,7 +175,7 @@
   .filters{ display:flex; gap:8px; flex-wrap:wrap; }
   .filters button{
     padding:8px 16px; border-radius:999px; border:1.5px solid var(--line); background:#fff;
-    font-family:'Hind Siliguri', sans-serif; font-size:0.85rem; cursor:pointer; color: var(--ink-soft); font-weight:500;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; font-size:0.85rem; cursor:pointer; color: var(--ink-soft); font-weight:500;
   }
   .filters button.active{ background: var(--ink); border-color: var(--ink); color:#fff; }
 
@@ -165,11 +190,11 @@
   .food-card:hover{ transform: translateY(-3px); box-shadow: 0 12px 24px -14px rgba(31,42,68,0.25); }
   .food-card .icon{ font-size:2rem; }
   .food-card h3{ font-size:1.05rem; margin-top:8px; }
-  .food-card .en-name{ font-family:'Work Sans',sans-serif; font-size:0.75rem; color: var(--ink-soft); }
+  .food-card .en-name{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.75rem; color: var(--ink-soft); }
   .food-card .meta{ display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
   .tag{
     font-size:0.68rem; font-weight:600; padding:3px 9px; border-radius:999px;
-    font-family:'Work Sans',sans-serif;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif;
   }
   .tag.age{ background:#EAF1E7; color: var(--leaf); }
   .tag.allergen{ background:#F7E3DC; color: var(--alert); }
@@ -197,7 +222,7 @@
   .modal h3{ font-size:1.4rem; margin-top:6px; }
   .modal .row{ margin-top:16px; padding-top:16px; border-top:1px solid var(--line); }
   .modal .row .k{
-    font-family:'Work Sans',sans-serif; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em;
     color: var(--leaf); font-weight:700; margin-bottom:4px;
   }
   .modal .row.warn .k{ color: var(--alert); }
@@ -215,7 +240,7 @@
   }
   .tab-btn{
     padding:10px 18px; border:none; background:none; cursor:pointer;
-    font-family:'Hind Siliguri', sans-serif; font-size:0.95rem; font-weight:600;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; font-size:0.95rem; font-weight:600;
     color: var(--ink-soft); border-bottom: 3px solid transparent; margin-bottom:-1px;
   }
   .tab-btn.active{ color: var(--ink); border-bottom-color: var(--mustard-deep); }
@@ -232,7 +257,7 @@
   .compare-card h3{ font-size:1.2rem; display:flex; align-items:center; gap:8px; }
   .compare-sub{ color: var(--ink-soft); font-size:0.9rem; margin:10px 0 16px; }
   .pc-row{ margin-top:14px; }
-  .pc-k{ font-family:'Work Sans',sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; margin-bottom:6px; }
+  .pc-k{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; margin-bottom:6px; }
   .pc-row.good .pc-k{ color: var(--leaf); }
   .pc-row.bad .pc-k{ color: var(--alert); }
   .pc-row ul{ margin:0; padding-left:20px; }
@@ -252,7 +277,7 @@
   .allergy-cards{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:16px; margin-bottom:14px; }
   .allergy-card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; }
   .allergy-card.warn{ border-color:#E8B9A8; background:#FDF4F0; }
-  .ac-title{ font-family:'Work Sans',sans-serif; font-weight:700; font-size:0.85rem; margin-bottom:8px; color: var(--ink); }
+  .ac-title{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-weight:700; font-size:0.85rem; margin-bottom:8px; color: var(--ink); }
   .allergy-card p{ font-size:0.88rem; color: var(--ink-soft); margin:0; }
   .disclaimer{ font-size:0.8rem; color: var(--ink-soft); font-style:italic; }
 
@@ -265,13 +290,13 @@
   }
   .log-form select, .log-form input[type=date], .log-form input[type=text]{
     padding:10px 12px; border-radius:10px; border:1.5px solid var(--line);
-    font-family:'Hind Siliguri', sans-serif; font-size:0.9rem; background:var(--paper);
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; font-size:0.9rem; background:var(--paper);
   }
   .log-form input[type=text]{ flex:1; min-width:160px; }
   .issue-check{ display:flex; align-items:center; gap:6px; font-size:0.85rem; color: var(--ink-soft); }
   .log-form button{
     padding:10px 20px; border-radius:10px; border:none; background: var(--leaf);
-    color:#fff; font-weight:600; cursor:pointer; font-family:'Hind Siliguri',sans-serif;
+    color:#fff; font-weight:600; cursor:pointer; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri',sans-serif;
   }
   .log-form button:hover{ background:#234029; }
 
@@ -280,7 +305,7 @@
   .streak-card.issue{ border-color:#E8B9A8; background:#FDF4F0; }
   .streak-card .sc-name{ font-weight:700; font-size:1rem; }
   .streak-card .sc-meta{ font-size:0.8rem; color: var(--ink-soft); margin-top:6px; }
-  .streak-card .sc-streak{ font-family:'Baloo Da 2',sans-serif; font-size:1.4rem; color: var(--mustard-deep); margin-top:8px; }
+  .streak-card .sc-streak{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-size:1.4rem; color: var(--mustard-deep); margin-top:8px; }
   .tracker-h3{ font-size:1.1rem; margin-bottom:10px; }
   .tracker-log{ display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
   .log-entry{
@@ -340,7 +365,7 @@
   }
   .v-card.tint{ background: var(--paper-dim); }
   .v-card h3{ font-size:1.1rem; margin-bottom:8px; }
-  .v-card h4{ font-family:'Baloo Da 2', sans-serif; font-size:0.98rem; margin:0 0 6px; }
+  .v-card h4{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2', sans-serif; font-size:0.98rem; margin:0 0 6px; }
 
   /* Responsive auto grids */
   .v-grid{ display:grid; gap:16px; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); }
@@ -349,7 +374,7 @@
 
   /* Small uppercase key label, same visual language as .modal .row .k */
   .v-k{
-    font-family:'Work Sans',sans-serif; font-size:0.68rem; text-transform:uppercase;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.68rem; text-transform:uppercase;
     letter-spacing:0.08em; color: var(--leaf); font-weight:700; margin-bottom:4px;
   }
   .v-k.warn{ color: var(--alert); }
@@ -363,7 +388,7 @@
   /* Reusable pill/chip built on the existing .tag scale */
   .chip{
     display:inline-block; font-size:0.68rem; font-weight:600; padding:3px 9px; border-radius:999px;
-    font-family:'Work Sans',sans-serif; background: var(--paper-dim); color: var(--ink-soft);
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; background: var(--paper-dim); color: var(--ink-soft);
   }
   .chip.leaf{ background:#EAF1E7; color:var(--leaf); }
   .chip.mustard{ background:#FBEFD9; color:var(--mustard-deep); }
@@ -374,7 +399,7 @@
   /* Buttons — primary matches the hero search button, ghost matches .filters */
   .v-btn{
     padding:12px 20px; border-radius:14px; border:none; background: var(--mustard-deep);
-    color:#fff; font-weight:600; font-family:'Hind Siliguri', sans-serif; cursor:pointer; font-size:0.95rem;
+    color:#fff; font-weight:600; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; cursor:pointer; font-size:0.95rem;
     transition: background 0.15s ease, transform 0.12s ease;
   }
   .v-btn:hover{ background:#8f5f0f; }
@@ -395,12 +420,12 @@
   }
   .v-field{ display:flex; flex-direction:column; gap:6px; }
   .v-field label{
-    font-family:'Work Sans',sans-serif; font-size:0.68rem; text-transform:uppercase;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.68rem; text-transform:uppercase;
     letter-spacing:0.07em; font-weight:700; color: var(--ink-soft);
   }
   .v-field select, .v-field input[type=text]{
     padding:11px 12px; border-radius:10px; border:1.5px solid var(--line);
-    font-family:'Hind Siliguri', sans-serif; font-size:0.92rem; background: var(--paper); color: var(--ink);
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; font-size:0.92rem; background: var(--paper); color: var(--ink);
     width:100%;
   }
   .v-field select:focus, .v-field input:focus{ outline:2px solid var(--mustard-deep); outline-offset:1px; }
@@ -419,13 +444,13 @@
     background: rgba(255,255,255,0.55); color: var(--ink-soft);
   }
   .v-empty .ee-icon{ font-size:2.6rem; display:block; margin-bottom:10px; opacity:0.85; }
-  .v-empty .ee-title{ font-family:'Baloo Da 2',sans-serif; font-weight:700; color:var(--ink); font-size:1.05rem; margin-bottom:6px; }
+  .v-empty .ee-title{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-weight:700; color:var(--ink); font-size:1.05rem; margin-bottom:6px; }
   .v-empty p{ margin:0 auto; max-width:44ch; font-size:0.9rem; }
 
   /* Collapsible accordion (FAQ + guide sections) */
   .acc{ border:1px solid var(--line); border-radius:16px; background:#fff; margin-bottom:12px; overflow:hidden; }
   .acc > summary{
-    list-style:none; cursor:pointer; padding:16px 20px; font-family:'Baloo Da 2',sans-serif;
+    list-style:none; cursor:pointer; padding:16px 20px; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif;
     font-weight:700; font-size:1.02rem; color:var(--ink);
     display:flex; align-items:center; justify-content:space-between; gap:12px;
   }
@@ -449,7 +474,7 @@
   .subnav{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; }
   .subnav button{
     padding:8px 15px; border-radius:999px; border:1.5px solid var(--line); background:#fff;
-    font-family:'Hind Siliguri', sans-serif; font-size:0.85rem; cursor:pointer; color: var(--ink-soft); font-weight:500;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; font-size:0.85rem; cursor:pointer; color: var(--ink-soft); font-weight:500;
   }
   .subnav button.active{ background: var(--ink); border-color: var(--ink); color:#fff; }
   .subpanel{ display:none; }
@@ -472,10 +497,10 @@
   }
   .meal-card:hover{ transform: translateY(-2px); box-shadow: 0 12px 24px -16px rgba(31,42,68,0.28); }
   .meal-card .slot{
-    font-family:'Work Sans',sans-serif; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em;
     font-weight:700; color: var(--mustard-deep);
   }
-  .meal-card .dish{ font-family:'Baloo Da 2',sans-serif; font-weight:700; font-size:1.12rem; margin:4px 0 2px; display:flex; gap:8px; align-items:center; }
+  .meal-card .dish{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-weight:700; font-size:1.12rem; margin:4px 0 2px; display:flex; gap:8px; align-items:center; }
   .meal-card .dish .mi{ font-size:1.5rem; }
   .plan-summary{
     display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); margin-bottom:20px;
@@ -483,14 +508,14 @@
   .stat{
     background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; text-align:center;
   }
-  .stat .sv{ font-family:'Baloo Da 2',sans-serif; font-size:1.5rem; font-weight:800; color: var(--leaf); line-height:1.2; }
+  .stat .sv{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-size:1.5rem; font-weight:800; color: var(--leaf); line-height:1.2; }
   .stat .sl{ font-size:0.75rem; color: var(--ink-soft); margin-top:2px; }
   .plan-reminders{ display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); margin-top:20px; }
   .reminder{
     background: var(--paper-dim); border-radius:14px; padding:14px 16px; font-size:0.88rem;
     border-left:4px solid var(--leaf-soft);
   }
-  .reminder b{ display:block; font-family:'Baloo Da 2',sans-serif; margin-bottom:3px; }
+  .reminder b{ display:block; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; margin-bottom:3px; }
   .plan-actions{ display:flex; gap:10px; flex-wrap:wrap; margin: 6px 0 20px; }
 
   /* =====================================================================
@@ -503,7 +528,7 @@
   .recipe-card:hover{ transform: translateY(-3px); box-shadow: 0 12px 24px -14px rgba(31,42,68,0.25); }
   .recipe-card .icon{ font-size:2rem; }
   .recipe-card h3{ font-size:1.05rem; margin-top:8px; }
-  .recipe-card .rc-sub{ font-family:'Work Sans',sans-serif; font-size:0.75rem; color: var(--ink-soft); }
+  .recipe-card .rc-sub{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.75rem; color: var(--ink-soft); }
   .recipe-card .rc-time{ font-size:0.8rem; color: var(--ink-soft); margin-top:8px; }
   .modal ol.steps{ margin:6px 0 0; padding-left:20px; }
   .modal ol.steps li{ margin-bottom:8px; font-size:0.92rem; }
@@ -516,7 +541,7 @@
      ===================================================================== */
   .portion-card{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:20px; }
   .portion-card .age-badge{
-    font-family:'Baloo Da 2',sans-serif; font-weight:800; font-size:1.25rem; color: var(--leaf);
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-weight:800; font-size:1.25rem; color: var(--leaf);
   }
   .bowl-viz{
     display:flex; align-items:flex-end; gap:10px; margin:14px 0 4px; min-height:64px;
@@ -553,12 +578,12 @@
   .tl-item.done::before{ background: var(--leaf); border-color: var(--leaf); }
   .tl-head{
     width:100%; text-align:left; background:#fff; border:1px solid var(--line); border-radius:14px;
-    padding:14px 18px; cursor:pointer; font-family:'Hind Siliguri',sans-serif; color:var(--ink);
+    padding:14px 18px; cursor:pointer; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri',sans-serif; color:var(--ink);
     display:flex; align-items:center; justify-content:space-between; gap:10px;
   }
   .tl-head:hover{ background: var(--paper-dim); }
-  .tl-head .tl-t{ font-family:'Baloo Da 2',sans-serif; font-weight:700; font-size:1rem; }
-  .tl-head .tl-age{ font-size:0.78rem; color: var(--mustard-deep); font-weight:700; font-family:'Work Sans',sans-serif; }
+  .tl-head .tl-t{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-weight:700; font-size:1rem; }
+  .tl-head .tl-age{ font-size:0.78rem; color: var(--mustard-deep); font-weight:700; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; }
   .tl-body{
     display:none; background: var(--paper-dim); border:1px solid var(--line); border-top:none;
     border-radius: 0 0 14px 14px; padding:16px 18px; margin-top:-8px;
@@ -573,7 +598,7 @@
   }
   .split-bar .sb{
     display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700;
-    font-family:'Work Sans',sans-serif; color:#fff; transition: width 0.4s ease;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; color:#fff; transition: width 0.4s ease;
   }
   .split-bar .sb.milk{ background: var(--leaf); }
   .split-bar .sb.solid{ background: var(--mustard); }
@@ -600,7 +625,7 @@
   .emergency-banner p{ margin:8px 0 0; font-size:0.92rem; opacity:0.95; }
   .emergency-banner .hotline{
     display:inline-block; margin-top:12px; background:#fff; color: var(--alert); font-weight:700;
-    padding:9px 18px; border-radius:999px; font-family:'Work Sans',sans-serif; text-decoration:none;
+    padding:9px 18px; border-radius:999px; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; text-decoration:none;
   }
   .nono-grid{ display:grid; gap:14px; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); }
   .nono{
@@ -615,7 +640,7 @@
   .step-num .sn{
     flex:0 0 auto; width:28px; height:28px; border-radius:50%; background: var(--alert); color:#fff;
     display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem;
-    font-family:'Work Sans',sans-serif;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif;
   }
   .step-num.calm .sn{ background: var(--leaf); }
   .step-num p{ margin:0; font-size:0.9rem; }
@@ -627,7 +652,7 @@
     background:#fff; border:1px solid var(--line); border-radius:18px; padding:20px; margin-bottom:22px;
   }
   .progress-top{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-  .progress-pct{ font-family:'Baloo Da 2',sans-serif; font-size:2.2rem; font-weight:800; color: var(--leaf); line-height:1; }
+  .progress-pct{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-size:2.2rem; font-weight:800; color: var(--leaf); line-height:1; }
   .progress-bar{ height:14px; border-radius:999px; background: var(--paper-dim); overflow:hidden; margin-top:12px; }
   .progress-bar span{
     display:block; height:100%; background: linear-gradient(90deg, var(--mustard), var(--leaf));
@@ -662,14 +687,14 @@
   }
   .gear-img::after{
     content: attr(data-ph); position:absolute; bottom:4px; right:8px; font-size:0.58rem;
-    color: var(--ink-soft); font-family:'Work Sans',sans-serif; letter-spacing:0.05em; opacity:0.65;
+    color: var(--ink-soft); font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; letter-spacing:0.05em; opacity:0.65;
   }
   .gear-body{ padding:16px; flex:1; display:flex; flex-direction:column; }
   .gear-body h3{ font-size:1rem; }
   .gear-stars{ color: var(--mustard); font-size:0.9rem; letter-spacing:1px; margin-top:4px; }
   .gear-stars .dim{ color: var(--line); }
   .gear-price{
-    font-family:'Work Sans',sans-serif; font-weight:700; font-size:0.85rem; color: var(--leaf); margin-top:8px;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-weight:700; font-size:0.85rem; color: var(--leaf); margin-top:8px;
   }
   .gear-line{ font-size:0.84rem; color: var(--ink-soft); margin-top:8px; }
   .gear-line b{ color: var(--ink); font-weight:600; }
@@ -680,7 +705,7 @@
   .shop-logo{
     width:52px; height:52px; border-radius:14px; background: var(--paper-dim); border:1px solid var(--line);
     display:flex; align-items:center; justify-content:center;
-    font-family:'Baloo Da 2',sans-serif; font-weight:800; font-size:1.25rem; color: var(--leaf);
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-weight:800; font-size:1.25rem; color: var(--leaf);
   }
   .shop-card a.open-site{
     margin-top:auto; display:inline-block; text-align:center; text-decoration:none;
@@ -703,7 +728,7 @@
   }
   .check-item.done .cb{ background: var(--leaf); border-color: var(--leaf); }
   .check-item.done > span{ color: var(--ink-soft); text-decoration: line-through; }
-  .mini-progress{ font-size:0.78rem; color: var(--ink-soft); font-family:'Work Sans',sans-serif; font-weight:600; }
+  .mini-progress{ font-size:0.78rem; color: var(--ink-soft); font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-weight:600; }
 
   /* Do / Don't comparison (screen-free module) */
   .dd-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
@@ -753,6 +778,90 @@
   .bk-flash.warn{ background:#FBEFD9; color: var(--mustard-deep); }
   .bk-flash.err{ background:#F7E3DC; color: var(--alert); }
 
+  /* =====================================================================
+     PLATE (THALA) LABEL FIX
+     Each .wedge is a full-size square clipped to one quadrant. The original
+     rule positioned every label with flexbox at bottom-centre, so all four
+     landed on the same point (~50%, 86%) -- which sits on the veg/protein
+     boundary. Result: the two top labels were clipped away entirely and the
+     two bottom ones were sliced down the middle.
+
+     Fix: take the label out of flow and anchor it at its own quadrant's
+     midpoint, ~30% of the plate width from centre along the 45° bisector.
+     That clears the 17%-radius centre disc and the outer rim at every size,
+     so nothing overlaps and nothing is clipped.
+     ===================================================================== */
+  .wedge span{
+    position: absolute;
+    left: var(--lx); top: var(--ly);
+    transform: translate(-50%, -50%);
+    padding-bottom: 0;                       /* was pushing labels to the rim */
+    font-size: clamp(0.62rem, 2.1vw, 0.78rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    text-align: center;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.35); /* legible on every wedge colour */
+    pointer-events: none;                    /* clicks belong to the wedge */
+  }
+  /* Quadrant midpoints. Set by attribute so the markup needs no change. */
+  .wedge[data-cat="fruit"]  { --lx: 29%; --ly: 29%; }   /* top-left     */
+  .wedge[data-cat="grain"]  { --lx: 71%; --ly: 29%; }   /* top-right    */
+  .wedge[data-cat="veg"]    { --lx: 29%; --ly: 71%; }   /* bottom-left  */
+  .wedge[data-cat="protein"]{ --lx: 71%; --ly: 71%; }   /* bottom-right */
+
+  /* Keyboard access: the wedges are interactive but were div-only. */
+  .wedge:focus-visible{ outline: 3px solid var(--ink); outline-offset: -6px; }
+
+  @media (max-width: 380px){
+    /* Pull labels very slightly inward on tiny screens so longer words
+       (প্রোটিন / Protein) stay clear of the rim. */
+    .wedge[data-cat="fruit"]  { --lx: 30%; --ly: 30%; }
+    .wedge[data-cat="grain"]  { --lx: 70%; --ly: 30%; }
+    .wedge[data-cat="veg"]    { --lx: 30%; --ly: 70%; }
+    .wedge[data-cat="protein"]{ --lx: 70%; --ly: 70%; }
+  }
+
+  /* =====================================================================
+     "CAN MY BABY EAT THIS?" LOOKUP
+     ===================================================================== */
+  .lk-searchbar{ display:flex; gap:10px; max-width:560px; margin-bottom:20px; }
+  .lk-searchbar input{
+    flex:1; padding:15px 18px; border-radius:14px; border:1.5px solid var(--line);
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'PK Bangla','Noto Sans Bengali','Hind Siliguri',sans-serif;
+    font-size:1.05rem; background:var(--card); color:var(--ink);
+  }
+  .lk-searchbar input:focus{ outline:2px solid var(--mustard-deep); outline-offset:1px; }
+  .lk-suggest{ margin-bottom:18px; }
+  .lk-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .lk-chip{
+    padding:8px 14px; border-radius:999px; border:1.5px solid var(--line); background:#fff;
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'PK Bangla','Noto Sans Bengali','Hind Siliguri',sans-serif;
+    font-size:0.86rem; cursor:pointer; color:var(--ink); transition:background .12s ease, border-color .12s ease;
+  }
+  .lk-chip:hover{ background:var(--paper-dim); border-color:var(--leaf-soft); }
+  .lk-chip:focus-visible{ outline:2px solid var(--mustard-deep); outline-offset:2px; }
+  .lk-answer{
+    background:#fff; border:1.5px solid var(--line); border-left-width:6px;
+    border-radius:18px; padding:22px; margin-bottom:14px;
+  }
+  .lk-answer.safe  { border-left-color: var(--leaf);       background:#F7FAF6; }
+  .lk-answer.care  { border-left-color: var(--mustard-deep); background:#FFFBF3; }
+  .lk-answer.danger{ border-left-color: var(--alert);      background:#FDF4F0; }
+  .lk-head{ display:flex; gap:14px; align-items:flex-start; }
+  .lk-icon{ font-size:2.4rem; line-height:1; flex:0 0 auto; }
+  .lk-answer h3{ font-size:1.25rem; margin:0; }
+  @media (max-width:480px){
+    .lk-searchbar{ flex-direction:column; }
+    .lk-answer{ padding:18px; }
+    .lk-icon{ font-size:2rem; }
+  }
+  /* Visually hidden but available to screen readers. */
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+
 </style>
 </head>
 <body>
@@ -792,6 +901,9 @@
   </button>
   <button class="tab-btn" data-tab="blwpro" onclick="setTab('blwpro')">
     <span lang-bn>👐 BLW মাস্টারি</span><span lang-en>👐 BLW Mastery</span>
+  </button>
+  <button class="tab-btn" data-tab="lookup" onclick="setTab('lookup')">
+    <span lang-bn>❓ খেতে পারবে?</span><span lang-en>❓ Can baby eat this?</span>
   </button>
   <button class="tab-btn" data-tab="tracker" onclick="setTab('tracker')">
     <span lang-bn>📋 ট্র্যাকার</span><span lang-en>📋 Tracker</span>
@@ -1084,6 +1196,7 @@
       <button data-sub="milk" onclick="Guides.show('milk')"><span lang-bn>🍼 দুধ বনাম সলিড</span><span lang-en>🍼 Milk vs Solids</span></button>
       <button data-sub="teething" onclick="Guides.show('teething')"><span lang-bn>🦷 দাঁত ওঠা</span><span lang-en>🦷 Teething</span></button>
       <button data-sub="screens" onclick="Guides.show('screens')"><span lang-bn>📵 স্ক্রিন-মুক্ত</span><span lang-en>📵 Screen-free</span></button>
+      <button data-sub="seasoning" onclick="Guides.show('seasoning')"><span lang-bn>🧂 তেল ও মসলা</span><span lang-en>🧂 Oils &amp; spices</span></button>
     </div>
 
     <div id="sub-portions" class="subpanel active"></div>
@@ -1091,6 +1204,7 @@
     <div id="sub-milk" class="subpanel"></div>
     <div id="sub-teething" class="subpanel"></div>
     <div id="sub-screens" class="subpanel"></div>
+    <div id="sub-seasoning" class="subpanel"></div>
   </section>
 </div><!-- /tab-guides -->
 
@@ -1141,6 +1255,35 @@
     <div id="blwpro-body"></div>
   </section>
 </div><!-- /tab-blwpro -->
+
+<!-- ============ 15. CAN MY BABY EAT THIS? ============ -->
+<div id="tab-lookup" class="tabpanel">
+  <section class="section">
+    <div class="mod-hero">
+      <h2><span lang-bn>❓ আমার বাচ্চা কি এটা খেতে পারবে?</span><span lang-en>❓ Can my baby eat this?</span></h2>
+      <p lang-bn>যেকোনো খাবারের নাম লিখুন — বাংলা বা ইংরেজি। কত মাস থেকে দেওয়া যাবে, কীভাবে প্রস্তুত করবেন, কতটুকু, কী ঝুঁকি আছে এবং নিরাপদ বিকল্প কী — সব এক জায়গায়।</p>
+      <p lang-en>Type any food, in Bangla or English. You get the minimum age, how to prepare it, how much to serve, the risks to watch for, and a safer alternative where one exists.</p>
+    </div>
+
+    <div class="lk-searchbar">
+      <label for="lk-input" class="sr-only"><span lang-bn>খাবারের নাম</span><span lang-en>Food name</span></label>
+      <input id="lk-input" type="search" autocomplete="off"
+             placeholder="মধু, লিচু, কাঁঠাল, চা... / honey, lychee, tea..."
+             aria-describedby="lk-hint">
+    </div>
+    <p id="lk-hint" class="v-small" style="margin:-12px 0 20px;">
+      <span lang-bn>💡 বাংলা বা ইংরেজি, যেকোনো ভাবে লিখতে পারেন।</span>
+      <span lang-en>💡 Search in either language.</span>
+    </p>
+
+    <div id="lk-results" aria-live="polite"></div>
+
+    <p class="med-note">
+      <span lang-bn>⚠ এই উত্তরগুলো সাধারণ শিক্ষামূলক নির্দেশনা। আপনার বাচ্চার অ্যালার্জির ইতিহাস, অকাল জন্ম, বা কোনো শারীরিক অবস্থা থাকলে নতুন খাবার দেওয়ার আগে শিশু বিশেষজ্ঞের পরামর্শ নিন।</span>
+      <span lang-en>⚠ These answers are general educational guidance. If your baby has an allergy history, was born prematurely, or has any medical condition, check with a pediatrician before introducing a new food.</span>
+    </p>
+  </section>
+</div><!-- /tab-lookup -->
 
 <footer>
   <span lang-bn>এই অ্যাপের সমস্ত তথ্য WHO, UNICEF, AAP ও NHS-এর সাধারণ পরিপূরক খাদ্য নির্দেশিকার উপর ভিত্তি করে শিক্ষামূলক উদ্দেশ্যে দেওয়া — এটি কোনোক্রমেই শিশু বিশেষজ্ঞ, পুষ্টিবিদ বা জরুরি সেবার বিকল্প নয়। জরুরি অবস্থায় ৯৯৯-এ কল করুন।</span>
@@ -3712,7 +3855,10 @@ const Guides = (function(){
   }
 
   /* ---- Sub-tab switching ---- */
-  const RENDERERS = { portions:renderPortions, texture:renderTexture, milk:renderMilk, teething:renderTeething, screens:renderScreens };
+  const RENDERERS = { portions:renderPortions, texture:renderTexture, milk:renderMilk,
+                      teething:renderTeething, screens:renderScreens,
+                      /* Oils and seasonings live in the Extras module. */
+                      seasoning: function(){ Extras.render(); } };
   let rendered = {};
 
   function show(id){
@@ -4950,6 +5096,666 @@ const Backup = (function(){
 
 
 /* =====================================================================
+   MODULE 14 — OILS, FATS AND SEASONINGS
+   Two jobs:
+     a) extend the existing FOODS catalogue with cooking fats so they are
+        searchable and filterable alongside everything else
+     b) render a dedicated guide answering "when can extra oil, spices and
+        seasonings be added?"
+
+   Guidance base: WHO complementary feeding (fat should supply roughly
+   30-45% of energy in infancy), NHS salt limits (<1 g/day under 12 months,
+   max 2 g/day at 1-3 years), AAP/Dietary Guidelines (no added sugar before
+   24 months), and the universal rule that honey is unsafe under 12 months
+   because of infant botulism.
+
+   These entries use cat:'extra'. The plate filters by cat, so selecting a
+   wedge correctly hides them -- an oil is not a grain, protein, veg or
+   fruit -- while "all" still shows them. No change to the plate is needed.
+   ===================================================================== */
+const Extras = (function(){
+
+  /* Cooking fats, added to the main FOODS array so search, age filters and
+     the tracker pick them up without any special-casing. */
+  const FATS = [
+    { id:'soybeanoil', icon:'🫗', cat:'extra', minAge:6, tier:'budget',
+      name_bn:'সয়াবিন তেল', name_en:'Soybean Oil',
+      serve_bn:'রান্নায় স্বাভাবিকভাবে ব্যবহার করুন; বাচ্চার প্রতি বেলার খাবারে আধা থেকে এক চা চামচ যোগ করুন।',
+      serve_en:'Use normally in cooking; stir half to one teaspoon into each of baby\'s meals.',
+      choke_bn:'বাংলাদেশে সবচেয়ে সহজলভ্য ও সাশ্রয়ী তেল। বারবার গরম করা তেল ব্যবহার করবেন না।',
+      choke_en:'The cheapest and most available oil in Bangladesh. Never reuse repeatedly heated oil.',
+      allergen:false },
+
+    { id:'mustardoil', icon:'🌾', cat:'extra', minAge:6, tier:'budget',
+      name_bn:'সরিষার তেল', name_en:'Mustard Oil',
+      serve_bn:'ভালোভাবে গরম করে (ধোঁয়া ওঠা পর্যন্ত) ঠান্ডা করে রান্নায় ব্যবহার করুন — এতে ঝাঁঝ কমে।',
+      serve_en:'Heat until it just smokes, then cool and cook with it — this softens the pungency.',
+      choke_bn:'ঐতিহ্যবাহী ও সহজলভ্য। এতে ইরুসিক অ্যাসিড থাকে বলে কিছু দেশে সীমিত ব্যবহারের পরামর্শ দেওয়া হয়, তাই একই তেল সবসময় না দিয়ে সয়াবিন/অলিভের সাথে পালা করে ব্যবহার করাই ভালো। কাঁচা সরিষার তেল বাচ্চাকে দেবেন না।',
+      choke_en:'Traditional and widely available. It contains erucic acid, which some authorities advise limiting, so alternate it with soybean or olive oil rather than using it exclusively. Never give raw, unheated mustard oil.',
+      allergen:false },
+
+    { id:'oliveoil', icon:'🫒', cat:'extra', minAge:6, tier:'premium',
+      name_bn:'অলিভ অয়েল', name_en:'Olive Oil',
+      serve_bn:'রান্না শেষে বা হালকা ভাজায় ব্যবহার করুন; খিচুড়ি বা সবজিতে আধা চা চামচ মিশিয়ে দিন।',
+      serve_en:'Use for gentle cooking or drizzle in at the end; stir half a teaspoon into khichuri or vegetables.',
+      choke_bn:'মনোআনস্যাচুরেটেড ফ্যাটে সমৃদ্ধ। দাম বেশি, তবে অল্প পরিমাণেই যথেষ্ট — অপরিহার্য নয়, সয়াবিন তেলও সমান কাজ করে।',
+      choke_en:'Rich in monounsaturated fat. Expensive, but a little goes a long way — not essential, soybean oil does the same job.',
+      allergen:false },
+
+    { id:'butter', icon:'🧈', cat:'extra', minAge:6, tier:'mid',
+      name_bn:'মাখন (লবণ ছাড়া)', name_en:'Butter (unsalted)',
+      serve_bn:'রুটি, ভাত বা সবজিতে খুব অল্প পরিমাণে (১/৪ চা চামচ) মিশিয়ে দিন।',
+      serve_en:'Melt a very small amount, about a quarter teaspoon, into ruti, rice or vegetables.',
+      choke_bn:'অবশ্যই লবণ ছাড়া মাখন বেছে নিন — সাধারণ মাখনে অনেক লবণ থাকে যা শিশুর কিডনির জন্য উপযুক্ত নয়। এটি দুগ্ধজাত অ্যালার্জেন।',
+      choke_en:'Choose unsalted — ordinary butter carries a lot of salt, which an infant\'s kidneys cannot handle. It is a dairy allergen.',
+      allergen:true },
+  ];
+
+  /* ---- Seasoning guide data -----------------------------------------
+     age    : earliest sensible age in months (0 means "not before 12/24")
+     amount : safe quantity, expressed the way a caregiver measures
+     why    : the reason, so the rule is memorable rather than arbitrary  */
+  const SEASONINGS = [
+    { id:'salt', icon:'🧂', verdict:'no', age:{bn:'১২ মাসের আগে নয়', en:'Not before 12 months'},
+      name:{bn:'লবণ', en:'Salt'},
+      amount:{bn:'১ বছরের নিচে বাড়তি লবণ একেবারেই নয়। ১-৩ বছরে দিনে সর্বোচ্চ ২ গ্রাম লবণ (প্রায় ০.৮ গ্রাম সোডিয়াম) — এটি এক চা চামচেরও অনেক কম।',
+               en:'No added salt at all under 12 months. From 1-3 years, at most 2 g of salt a day (about 0.8 g sodium) — far less than a teaspoon.'},
+      why:{bn:'শিশুর কিডনি অপরিণত এবং অতিরিক্ত সোডিয়াম সামলাতে পারে না। এছাড়া অল্প বয়সে নোনতা স্বাদে অভ্যস্ত হলে সারাজীবন বেশি লবণ খাওয়ার প্রবণতা তৈরি হয়।',
+            en:'An infant\'s kidneys are immature and cannot clear excess sodium. Early exposure also sets a lifelong preference for saltier food.'},
+      how:{bn:'রান্নার শেষে লবণ দেওয়ার আগে বাচ্চার অংশ তুলে রাখুন। প্রক্রিয়াজাত খাবার, চিপস, স্যুপ কিউব, নুডলসের মসলা, বিস্কুট ও পাউরুটিতেও লুকানো লবণ থাকে।',
+           en:'Set aside baby\'s portion before salting. Hidden salt also lurks in processed food, chips, stock cubes, noodle sachets, biscuits and bread.'} },
+
+    { id:'sugar', icon:'🍬', verdict:'no', age:{bn:'২ বছরের আগে নয়', en:'Not before 2 years'},
+      name:{bn:'চিনি ও গুড়', en:'Sugar and molasses'},
+      amount:{bn:'২ বছরের আগে বাড়তি চিনি, গুড় বা মিষ্টি একেবারেই নয়।',
+               en:'No added sugar, molasses or sweets at all before 2 years.'},
+      why:{bn:'দাঁত ওঠার সাথে সাথেই ক্ষয়ের ঝুঁকি শুরু হয়, এবং মিষ্টি স্বাদে অভ্যস্ত হলে সবজি ও অন্যান্য খাবার গ্রহণ করা কঠিন হয়ে যায়। চিনি ক্যালরি দেয় কিন্তু কোনো পুষ্টি দেয় না।',
+            en:'Decay risk begins the moment teeth appear, and a sweet preference makes vegetables and other foods harder to accept. Sugar adds calories but no nutrients.'},
+      how:{bn:'মিষ্টি দরকার হলে চটকানো পাকা কলা, খেজুরের পেস্ট বা আপেল সেদ্ধ ব্যবহার করুন। ⚠ ১ বছরের নিচে মধু সম্পূর্ণ নিষিদ্ধ — বোটুলিজমের ঝুঁকি।',
+           en:'If you need sweetness, use mashed ripe banana, date paste or stewed apple. ⚠ Honey is entirely forbidden under 12 months because of botulism risk.'} },
+
+    { id:'turmeric', icon:'🟡', verdict:'yes', age:{bn:'৬ মাস থেকে', en:'From 6 months'},
+      name:{bn:'হলুদ', en:'Turmeric'},
+      amount:{bn:'এক চিমটি (~১/৮ চা চামচ) প্রতি বেলার রান্নায়।', en:'A pinch, about 1/8 teaspoon, per dish.'},
+      why:{bn:'বাঙালি রান্নার মূল মসলা; রঙ ও হালকা স্বাদ যোগ করে এবং বাচ্চাকে পারিবারিক খাবারের স্বাদে অভ্যস্ত করে।',
+            en:'The foundation of Bengali cooking; it adds colour and a mild flavour, and builds familiarity with the family palate.'},
+      how:{bn:'রান্নার শুরুতে তেলে বা পানিতে মিশিয়ে দিন। কাঁচা হলুদ গুঁড়া সরাসরি খাবারে ছিটাবেন না।',
+           en:'Add early in cooking, into the oil or water. Do not sprinkle raw powder onto finished food.'} },
+
+    { id:'cumin', icon:'🌰', verdict:'yes', age:{bn:'৬ মাস থেকে', en:'From 6 months'},
+      name:{bn:'জিরা', en:'Cumin'},
+      amount:{bn:'এক চিমটি গুঁড়া বা কয়েকটি গোটা দানা রান্নায়।', en:'A pinch of powder, or a few whole seeds in the cooking.'},
+      why:{bn:'হজমে সহায়ক হিসেবে ঐতিহ্যগতভাবে ব্যবহৃত; পেট ফাঁপা কমাতে পারে এবং খাবারে সুন্দর ঘ্রাণ আনে।',
+            en:'Traditionally used as a digestive; may ease bloating and gives food an appealing aroma.'},
+      how:{bn:'ভেজে গুঁড়া করে রাখলে স্বাদ ভালো হয়। গোটা দানা ছোট বাচ্চার জন্য গুঁড়া করে দেওয়াই ভালো।',
+           en:'Toasting then grinding improves the flavour. For younger babies, grind rather than leaving seeds whole.'} },
+
+    { id:'coriander', icon:'🌿', verdict:'yes', age:{bn:'৬ মাস থেকে', en:'From 6 months'},
+      name:{bn:'ধনে ও ধনেপাতা', en:'Coriander (seed and leaf)'},
+      amount:{bn:'এক চিমটি গুঁড়া, বা ১ চা চামচ মিহি কুচানো পাতা।', en:'A pinch of ground seed, or a teaspoon of finely chopped leaf.'},
+      why:{bn:'মৃদু, সুগন্ধি স্বাদ যা বেশিরভাগ বাচ্চা সহজে গ্রহণ করে; ভিটামিন কে ও অ্যান্টিঅক্সিডেন্ট সরবরাহ করে।',
+            en:'A mild, aromatic flavour most babies accept easily; the leaf supplies vitamin K and antioxidants.'},
+      how:{bn:'পাতা রান্নার শেষে মিশিয়ে দিন যাতে ঘ্রাণ থাকে; ভালোভাবে ধুয়ে নিন।',
+           en:'Stir the leaf in at the end to keep its aroma, and wash it thoroughly first.'} },
+
+    { id:'garlic', icon:'🧄', verdict:'yes', age:{bn:'৬ মাস থেকে (রান্নায়)', en:'From 6 months, cooked'},
+      name:{bn:'রসুন', en:'Garlic'},
+      amount:{bn:'১/২ থেকে ১ কোয়া, ভালোভাবে রান্না করা।', en:'Half to one clove, thoroughly cooked.'},
+      why:{bn:'স্বাদের ভিত্তি তৈরি করে এবং লবণ ছাড়াই খাবার সুস্বাদু করে তোলে — এটিই এর সবচেয়ে বড় উপকার।',
+            en:'Builds a flavour base and makes food taste good without salt — which is its single biggest benefit here.'},
+      how:{bn:'অবশ্যই রান্না করে দিন; কাঁচা রসুন ঝাঁঝালো ও হজমে কষ্টকর।',
+           en:'Always cook it; raw garlic is harsh and hard to digest.'} },
+
+    { id:'ginger', icon:'🫚', verdict:'yes', age:{bn:'৬ মাস থেকে (অল্প)', en:'From 6 months, small amounts'},
+      name:{bn:'আদা', en:'Ginger'},
+      amount:{bn:'১/৪ চা চামচ বাটা, রান্নায় মিশিয়ে।', en:'A quarter teaspoon of paste, cooked into the dish.'},
+      why:{bn:'হজমে সহায়ক এবং বমিভাব কমাতে পারে; মাছ ও মাংসের গন্ধ কাটায়।',
+            en:'Aids digestion, may settle nausea, and cuts the smell of fish and meat.'},
+      how:{bn:'বেশি দিলে ঝাঁঝালো লাগে ও বাচ্চা খাবার প্রত্যাখ্যান করতে পারে — অল্প দিয়ে শুরু করুন।',
+           en:'Too much tastes sharp and can cause refusal — start small.'} },
+
+    { id:'pepper', icon:'⚫', verdict:'care', age:{bn:'৮ মাস থেকে (খুব অল্প)', en:'From 8 months, very small amounts'},
+      name:{bn:'গোলমরিচ', en:'Black pepper'},
+      amount:{bn:'এক চিমটিরও কম, রান্নার মধ্যে।', en:'Less than a pinch, cooked into the dish.'},
+      why:{bn:'হালকা ঝাঁঝ যোগ করে; ঐতিহ্যগতভাবে হলুদের সাথে ব্যবহার করা হয়।',
+            en:'Adds a gentle warmth, and is traditionally paired with turmeric.'},
+      how:{bn:'সরাসরি ছিটিয়ে দেবেন না — শুকনো গুঁড়া নাকে গেলে হাঁচি ও অস্বস্তি হতে পারে। রান্নায় মিশিয়ে দিন।',
+           en:'Do not sprinkle it on top — inhaled powder causes sneezing and discomfort. Cook it in instead.'} },
+
+    { id:'chili', icon:'🌶', verdict:'no', age:{bn:'১২ মাসের আগে নয়', en:'Not before 12 months'},
+      name:{bn:'মরিচ (কাঁচা ও শুকনা)', en:'Chilli (fresh and dried)'},
+      amount:{bn:'১ বছরের পর, পরিবারের খাবারে থাকলে খুব সামান্য পরিমাণে ধীরে ধীরে পরিচয় করানো যেতে পারে।',
+               en:'After 12 months, a very small amount can be introduced gradually if the family eats it.'},
+      why:{bn:'ক্ষতিকর নয়, তবে ঝাল শিশুর মুখ ও পাকস্থলীতে জ্বালা তৈরি করে এবং খাবারের প্রতি নেতিবাচক অভিজ্ঞতা তৈরি করতে পারে।',
+            en:'Not harmful as such, but heat irritates a baby\'s mouth and stomach and can create a negative association with eating.'},
+      how:{bn:'রান্নার শুরুতেই বাচ্চার অংশ আলাদা করে নিন, তারপর পরিবারের অংশে মরিচ দিন।',
+           en:'Separate baby\'s portion at the start of cooking, then add chilli to the family\'s share.'} },
+
+    { id:'onion', icon:'🧅', verdict:'yes', age:{bn:'৬ মাস থেকে (রান্নায়)', en:'From 6 months, cooked'},
+      name:{bn:'পেঁয়াজ', en:'Onion'},
+      amount:{bn:'রান্নার স্বাভাবিক পরিমাণ।', en:'Normal cooking quantity.'},
+      why:{bn:'প্রায় সব দেশি রান্নার ভিত্তি; মিষ্টি স্বাদ আনে ও লবণের প্রয়োজন কমায়।',
+            en:'The base of almost every local dish; it brings sweetness and reduces the need for salt.'},
+      how:{bn:'নরম হওয়া পর্যন্ত ভালোভাবে ভেজে বা সেদ্ধ করে নিন। কাঁচা পেঁয়াজ দেবেন না।',
+           en:'Cook until fully soft. Do not serve raw.'} },
+
+    { id:'tomato', icon:'🍅', verdict:'yes', age:{bn:'৬ মাস থেকে', en:'From 6 months'},
+      name:{bn:'টমেটো', en:'Tomato'},
+      amount:{bn:'১/২ থেকে ১টি, খোসা ও বীজ ছাড়া।', en:'Half to one, peeled and deseeded.'},
+      why:{bn:'ভিটামিন সি সরবরাহ করে, যা একই বেলার ডাল বা শাকের আয়রন শোষণ কয়েকগুণ বাড়িয়ে দেয়।',
+            en:'Supplies vitamin C, which multiplies iron absorption from the dal or greens in the same meal.'},
+      how:{bn:'খোসা ছাড়িয়ে দিন — খোসা গলায় আটকাতে পারে। টক হওয়ায় মুখের চারপাশে সাময়িক র‍্যাশ হতে পারে, এটি অ্যালার্জি নয়।',
+           en:'Peel it — the skin is a choking risk. Its acidity can cause a temporary rash around the mouth, which is not an allergy.'} },
+
+    { id:'spicemix', icon:'🥣', verdict:'yes', age:{bn:'৮ মাস থেকে', en:'From 8 months'},
+      name:{bn:'ঘরে তৈরি মসলার মিশ্রণ', en:'Homemade spice mix'},
+      amount:{bn:'এক চিমটি প্রতি বেলায়।', en:'A pinch per meal.'},
+      why:{bn:'ঘরে বানালে লবণ, মরিচ ও প্রিজারভেটিভ নিয়ন্ত্রণে থাকে — বাজারের গরম মসলা ও রেডিমিক্সে প্রায়ই লবণ ও ঝাল থাকে।',
+            en:'Making it yourself keeps salt, chilli and preservatives out — shop-bought garam masala and ready mixes usually contain both.'},
+      how:{bn:'সহজ মিশ্রণ: ২ ভাগ জিরা + ১ ভাগ ধনে + ১/২ ভাগ হলুদ + সামান্য দারুচিনি ও এলাচ। শুকনো ভেজে গুঁড়া করে বায়ুরোধী বয়ামে ১ মাস রাখুন।',
+           en:'A simple blend: 2 parts cumin, 1 part coriander, half a part turmeric, a little cinnamon and cardamom. Dry-roast, grind, and keep airtight for a month.'} },
+  ];
+
+  /* ---- Rendering ----------------------------------------------------- */
+  const VERDICT_STYLE = {
+    yes:  { chip:'leaf',    icon:'✅', label:{bn:'দেওয়া যাবে', en:'Safe to use'} },
+    care: { chip:'mustard', icon:'⚠️', label:{bn:'সতর্কতার সাথে', en:'With care'} },
+    no:   { chip:'alert',   icon:'🚫', label:{bn:'এখনই নয়', en:'Not yet'} },
+  };
+
+  function render(){
+    const el = document.getElementById('sub-seasoning');
+    if(!el) return;
+
+    let html = `<div class="v-card tint" style="margin-bottom:20px;">
+      <h3>🫗 ${Util.tt('তেল ও চর্বি কেন জরুরি','Why fat matters')}</h3>
+      <p class="v-muted" style="margin:0;">${Util.tt(
+        'শিশুর পেট ছোট কিন্তু শক্তির চাহিদা বিশাল। চর্বি সবচেয়ে ঘন শক্তির উৎস — WHO-এর নির্দেশনা অনুযায়ী শিশুর মোট ক্যালরির প্রায় ৩০-৪৫% চর্বি থেকে আসা উচিত। তাই প্রতি বেলার খাবারে আধা থেকে এক চা চামচ তেল, ঘি বা মাখন মিশিয়ে দেওয়া হলো ছোট পেটে বেশি পুষ্টি ঢোকানোর সবচেয়ে সহজ উপায়। এটি চর্বিতে-দ্রবণীয় ভিটামিন এ, ডি, ই ও কে শোষণেও সাহায্য করে।',
+        'A baby has a tiny stomach and an enormous energy requirement. Fat is the most concentrated energy source there is — WHO guidance puts roughly 30-45% of an infant\'s calories as fat. Stirring half to one teaspoon of oil, ghee or butter into each meal is therefore the simplest way to get more nutrition into a small stomach. It also helps absorb the fat-soluble vitamins A, D, E and K.')}</p>
+    </div>`;
+
+    /* Fats pulled straight from the FOODS entries added above, so the two
+       can never disagree. */
+    html += `<h3 style="margin:22px 0 12px;">🫗 ${Util.tt('রান্নার তেল ও চর্বি','Cooking oils and fats')}</h3><div class="v-grid wide">`;
+    FATS.concat([Util.food('ghee')].filter(Boolean)).forEach(f => {
+      if(!f) return;
+      html += `<div class="v-card">
+        <h4>${f.icon} ${state.lang==='bn' ? f.name_bn : f.name_en}</h4>
+        <div class="chip-row" style="margin-top:0;">
+          <span class="chip leaf">${Util.num(f.minAge)}+ ${Util.tt('মাস','mo')}</span>
+          ${f.allergen ? `<span class="chip alert">${Util.tt('অ্যালার্জেন','Allergen')}</span>` : ''}
+        </div>
+        <div class="v-row"><div class="v-k">${Util.tt('রান্নায় ব্যবহার','How to use')}</div><p>${state.lang==='bn' ? f.serve_bn : f.serve_en}</p></div>
+        <div class="v-row"><div class="v-k warn">${Util.tt('সতর্কতা','Precautions')}</div><p>${state.lang==='bn' ? f.choke_bn : f.choke_en}</p></div>
+      </div>`;
+    });
+    html += '</div>';
+
+    html += `<div class="med-note calm">${Util.tt(
+      '💡 <b>কতটুকু তেল?</b> ৬-১২ মাসে প্রতি বেলায় ১/২ চা চামচ, ১-২ বছরে ১ চা চামচ পর্যন্ত। একই তেল সারাবছর ব্যবহার না করে দুই-তিন ধরনের তেল পালা করে ব্যবহার করলে বিভিন্ন ফ্যাটি অ্যাসিড পাওয়া যায়। ভাজাভুজি নয় — রান্নায় মিশিয়ে দেওয়াই যথেষ্ট।',
+      '💡 <b>How much oil?</b> About half a teaspoon per meal from 6-12 months, up to a teaspoon from 1-2 years. Rotating two or three different oils through the year gives a better spread of fatty acids than using one exclusively. This is about stirring it into food, not deep frying.')}</div>`;
+
+    html += `<h3 style="margin:26px 0 12px;">🧂 ${Util.tt('লবণ, চিনি ও মসলা — কখন থেকে?','Salt, sugar and spices — when?')}</h3>`;
+    html += `<p class="v-muted" style="max-width:70ch;margin-bottom:16px;">${Util.tt(
+      'মসলা আর লবণ এক জিনিস নয়। বাঙালি রান্নার প্রায় সব মসলাই ৬ মাস থেকে অল্প পরিমাণে দেওয়া যায় এবং এতে বাচ্চা পারিবারিক খাবারের স্বাদে অভ্যস্ত হয়। শুধু তিনটি জিনিস আলাদা: লবণ, চিনি ও ঝাল।',
+      'Spices and salt are not the same thing. Almost every spice in Bengali cooking is fine from 6 months in small amounts, and it is how a baby learns the family palate. Only three things are treated differently: salt, sugar and chilli.')}</p>`;
+
+    html += '<div class="v-grid wide">';
+    SEASONINGS.forEach(s => {
+      const v = VERDICT_STYLE[s.verdict];
+      html += `<div class="v-card"${s.verdict==='no' ? ' style="border-color:#E8B9A8;background:#FDF4F0;"' : ''}>
+        <h4>${s.icon} ${Util.t(s.name)}</h4>
+        <div class="chip-row" style="margin-top:0;">
+          <span class="chip ${v.chip}">${v.icon} ${Util.t(v.label)}</span>
+          <span class="chip">${Util.t(s.age)}</span>
+        </div>
+        <div class="v-row"><div class="v-k">${Util.tt('নিরাপদ পরিমাণ','Safe amount')}</div><p>${Util.t(s.amount)}</p></div>
+        <div class="v-row"><div class="v-k">${Util.tt('কেন','Why')}</div><p>${Util.t(s.why)}</p></div>
+        <div class="v-row"><div class="v-k mut">${Util.tt('কীভাবে দেবেন','How to use it')}</div><p class="v-muted">${Util.t(s.how)}</p></div>
+      </div>`;
+    });
+    html += '</div>';
+
+    html += `<div class="med-note">${Util.tt(
+      '⚠ <b>সবচেয়ে গুরুত্বপূর্ণ তিনটি নিয়ম:</b> ১ বছরের নিচে বাড়তি লবণ নয় · ২ বছরের নিচে বাড়তি চিনি নয় · ১ বছরের নিচে মধু একেবারেই নয় (বোটুলিজমের ঝুঁকি)। বাকি প্রায় সব মসলা অল্প পরিমাণে নিরাপদ।',
+      '⚠ <b>The three rules that matter most:</b> no added salt under 1 year · no added sugar under 2 years · no honey at all under 1 year, because of botulism risk. Almost every other spice is safe in small amounts.')}</p>`;
+
+    el.innerHTML = html;
+  }
+
+  /* Extend the shared catalogue once, at load. Guarded so a double-run
+     cannot duplicate entries. */
+  function install(){
+    FATS.forEach(function(f){
+      if(!FOODS.some(x => x.id === f.id)) FOODS.push(f);
+    });
+  }
+
+  return { install, render, SEASONINGS, FATS };
+})();
+
+/* Extend the catalogue immediately, not on DOMContentLoaded: FOODS must be
+   complete before anything reads it, and the original render() has already
+   run by this point, so the grid is repainted once here. */
+Extras.install();
+render();                 /* repaint the food grid   */
+populateFoodSelect();     /* and the tracker dropdown */
+
+
+/* =====================================================================
+   MODULE 15 — "CAN MY BABY EAT THIS?"
+   A single search box answering the question caregivers actually ask.
+
+   Answers come from two places, deliberately:
+     1. the FOODS catalogue, converted on the fly -- so every one of the
+        100+ foods is answerable without writing a second copy of the data
+     2. a curated table for things that are NOT foods we recommend, and so
+        do not belong in the catalogue: honey, tea, coffee, chocolate,
+        whole nuts, popcorn, juice, cow milk as a drink, and so on
+   The second group is where the dangerous questions live, which is why
+   they get hand-written answers rather than generated ones.
+   ===================================================================== */
+const Lookup = (function(){
+
+  /* Search aliases: Bangla, English, and the roman spellings caregivers
+     actually type. Keyed to a FOODS id or a curated answer id. */
+  const ALIASES = {
+    honey:['মধু','modhu','মৌ','honey'],
+    tea:['চা','cha','tea','দুধ চা','milk tea'],
+    coffee:['কফি','coffee','ক্যাফেইন','caffeine'],
+    chocolate:['চকলেট','chocolate','choklet','কোকো','cocoa'],
+    cowmilkdrink:['গরুর দুধ','goru dudh','cow milk','cows milk','তরল দুধ','liquid milk'],
+    juice:['জুস','juice','ফলের রস','fruit juice','প্যাকেট জুস'],
+    softdrink:['কোক','coke','soft drink','কোমল পানীয়','সোডা','soda','পেপসি'],
+    wholenuts:['গোটা বাদাম','whole nuts','আস্ত বাদাম','কাজু','walnut','আখরোট'],
+    popcorn:['পপকর্ন','popcorn','খই'],
+    rawegg:['কাঁচা ডিম','raw egg','আধা সেদ্ধ ডিম','half boiled egg','পোচ'],
+    packagedsnack:['চিপস','chips','প্যাকেট খাবার','packaged snack','কুড়কুড়ে','বিস্কুট','biscuit'],
+    /* keyed to the FOODS id, not a name, so the alias actually attaches */
+    peanut:['peanut','peanut butter','পিনাট বাটার','চীনাবাদাম','badam','বাদাম মাখন'],
+    almondbutter:['almond butter','কাঠবাদাম','almond'],
+    cashewbutter:['cashew butter','কাজু','cashew'],
+    jackfruit:['কাঁঠাল','kathal','jackfruit'],
+    lychee:['লিচু','lichu','lychee','litchi'],
+    mushroom:['মাশরুম','mushroom','ছত্রাক'],
+    dates:['খেজুর','khejur','dates','date'],
+    custardapple:['আতা','ata','custard apple','শরিফা','sharifa'],
+    dragonfruit:['ড্রাগন','dragon fruit','ড্রাগন ফল'],
+    cheese:['চিজ','cheese','পনির','paneer'],
+    yogurt:['দই','doi','yogurt','টক দই','curd'],
+    egg:['ডিম','dim','egg'],
+    fish:['মাছ','mach','fish','রুই','rui'],
+    shrimp:['চিংড়ি','chingri','shrimp','prawn'],
+    salt:['লবণ','lobon','salt','নুন'],
+    sugar:['চিনি','chini','sugar','গুড়','gur','molasses'],
+    chili:['মরিচ','morich','chili','chilli','ঝাল'],
+    water:['পানি','pani','water','জল'],
+  };
+
+  /* Curated answers for items that are not in FOODS. verdict:
+     'yes' | 'care' | 'no'  -- 'no' means not at this age, or not at all. */
+  const CURATED = [
+    { id:'honey', icon:'🍯', verdict:'no', minAge:12,
+      name:{bn:'মধু', en:'Honey'},
+      head:{bn:'১ বছরের নিচে একেবারেই নয় — এটি এই অ্যাপের সবচেয়ে কঠোর নিয়ম।',
+            en:'Never under 12 months — this is the strictest rule in the app.'},
+      prep:{bn:'১ বছরের পর অল্প পরিমাণে দেওয়া যায়, তবে এটি চিনিরই একটি রূপ, তাই ২ বছরের আগে না দেওয়াই ভালো।',
+            en:'After 12 months a little is allowed, but it is still a form of sugar, so better avoided before 2 years.'},
+      serving:{bn:'১ বছরের পর: ১/৪ চা চামচের কম, মাঝে মাঝে।', en:'After 12 months: less than a quarter teaspoon, occasionally.'},
+      benefits:{bn:'শিশুর জন্য এমন কোনো পুষ্টিগুণ নেই যা অন্য নিরাপদ খাবার থেকে পাওয়া যায় না।',
+                en:'Offers nothing nutritionally that safer foods do not already provide.'},
+      risks:{bn:'মধুতে Clostridium botulinum-এর স্পোর থাকতে পারে। শিশুর অন্ত্র অপরিণত বলে এই স্পোর সেখানে বেড়ে বিষ তৈরি করতে পারে — একে ইনফ্যান্ট বোটুলিজম বলে, যা প্রাণঘাতী হতে পারে। রান্না বা ফোটানোতেও এই স্পোর নষ্ট হয় না। কাঁচা, প্রক্রিয়াজাত, "খাঁটি" — সব ধরনের মধুর ক্ষেত্রেই প্রযোজ্য।',
+             en:'Honey can carry Clostridium botulinum spores. An infant\'s immature gut lets those spores grow and produce toxin — infant botulism, which can be fatal. Cooking and boiling do not destroy the spores. This applies to raw, processed and "pure" honey alike.'},
+      alts:{bn:'মিষ্টির জন্য: চটকানো পাকা কলা, খেজুরের পেস্ট, সেদ্ধ আপেল বা পাকা আম।',
+            en:'For sweetness: mashed ripe banana, date paste, stewed apple or ripe mango.'} },
+
+    { id:'tea', icon:'🍵', verdict:'no', minAge:24,
+      name:{bn:'চা', en:'Tea'},
+      head:{bn:'শিশুদের জন্য সুপারিশ করা হয় না।', en:'Not recommended for babies or toddlers.'},
+      prep:{bn:'—', en:'—'},
+      serving:{bn:'—', en:'—'},
+      benefits:{bn:'শিশুর জন্য কোনো উপকার নেই।', en:'No benefit for an infant.'},
+      risks:{bn:'চায়ের ট্যানিন খাবার থেকে আয়রন শোষণ উল্লেখযোগ্যভাবে কমিয়ে দেয় — আর ৬ মাসের পর আয়রনই সবচেয়ে গুরুত্বপূর্ণ পুষ্টি উপাদান। দুধ-চিনি দিয়ে বানানো চায়ে বাড়তি চিনি যোগ হয়, এবং ক্যাফেইন ঘুম ও খাওয়ার রুটিন নষ্ট করে।',
+             en:'The tannins in tea markedly reduce iron absorption from food — and iron is the single most important nutrient after 6 months. Milk-tea adds sugar on top, and caffeine disrupts sleep and appetite.'},
+      alts:{bn:'পানি (৬ মাস+), বুকের দুধ বা ফর্মুলা। তেষ্টা মেটাতে খোলা কাপে পানিই যথেষ্ট।',
+            en:'Water from 6 months, breastmilk or formula. Plain water in an open cup covers thirst.'} },
+
+    { id:'coffee', icon:'☕', verdict:'no', minAge:24,
+      name:{bn:'কফি ও ক্যাফেইন', en:'Coffee and caffeine'},
+      head:{bn:'না — কোনো বয়সেই শিশুকে ক্যাফেইন দেওয়া উচিত নয়।', en:'No — caffeine is not appropriate for infants or toddlers.'},
+      prep:{bn:'—', en:'—'}, serving:{bn:'—', en:'—'},
+      benefits:{bn:'কোনো উপকার নেই।', en:'None.'},
+      risks:{bn:'ছোট শরীরে ক্যাফেইন দ্রুত প্রভাব ফেলে — অস্থিরতা, দ্রুত হৃদস্পন্দন, ঘুমের ব্যাঘাত ও খাওয়ায় অনীহা। চকলেট, কোলা ও এনার্জি ড্রিংকেও ক্যাফেইন থাকে।',
+             en:'Caffeine hits a small body hard — restlessness, a racing heart, disrupted sleep and reduced appetite. It is also in chocolate, cola and energy drinks.'},
+      alts:{bn:'পানি বা দুধ।', en:'Water or milk.'} },
+
+    { id:'chocolate', icon:'🍫', verdict:'no', minAge:24,
+      name:{bn:'চকলেট', en:'Chocolate'},
+      head:{bn:'২ বছরের আগে না দেওয়াই ভালো।', en:'Best avoided before 2 years.'},
+      prep:{bn:'২ বছরের পর মাঝে মাঝে অল্প পরিমাণে।', en:'Occasional small amounts after 2 years.'},
+      serving:{bn:'ছোট এক টুকরা, মাঝে মাঝে।', en:'One small square, occasionally.'},
+      benefits:{bn:'পুষ্টিগত কোনো প্রয়োজন নেই।', en:'No nutritional need.'},
+      risks:{bn:'বাড়তি চিনি ও ক্যাফেইন দুটোই আছে। দুধ চকলেটে চিনির পরিমাণ বেশি। শক্ত চকলেট ও বাদামযুক্ত চকলেট গলায় আটকানোর ঝুঁকি তৈরি করে। দুগ্ধজাত ও প্রায়ই বাদামের অ্যালার্জেন থাকে।',
+             en:'Contains both added sugar and caffeine, and milk chocolate is largely sugar. Hard or nut-filled chocolate is a choking risk. It is a dairy allergen and often carries nut traces.'},
+      alts:{bn:'খেজুর-কোকো এনার্জি বল, বা চটকানো কলার সাথে সামান্য কোকো পাউডার (১২ মাস+)।',
+            en:'Date-and-cocoa energy balls, or mashed banana with a little cocoa powder from 12 months.'} },
+
+    { id:'cowmilkdrink', icon:'🥛', verdict:'care', minAge:12,
+      name:{bn:'গরুর দুধ (পানীয় হিসেবে)', en:'Cow milk as a drink'},
+      head:{bn:'রান্নায় ৬ মাস থেকে, কিন্তু প্রধান পানীয় হিসেবে ১২ মাসের আগে নয়।',
+            en:'Fine in cooking from 6 months, but not as a main drink before 12 months.'},
+      prep:{bn:'১২ মাসের পর পূর্ণ ননিযুক্ত (full-fat) দুধ, ভালোভাবে ফুটিয়ে ঠান্ডা করে কাপে দিন।',
+            en:'After 12 months, offer full-fat milk, well boiled and cooled, in a cup.'},
+      serving:{bn:'দিনে ৩৫০-৫০০ মি.লি.। ৫০০ মি.লি.-এর বেশি দিলে আয়রন শোষণ কমে ও খাবারে অরুচি হয়।',
+               en:'350-500 ml a day. More than 500 ml reduces iron absorption and blunts appetite for food.'},
+      benefits:{bn:'ক্যালসিয়াম, প্রোটিন ও ভিটামিন বি১২-এর ভালো উৎস।', en:'A good source of calcium, protein and vitamin B12.'},
+      risks:{bn:'১ বছরের আগে প্রধান পানীয় হিসেবে দিলে আয়রন কম থাকায় রক্তস্বল্পতার ঝুঁকি বাড়ে এবং অন্ত্রে সূক্ষ্ম রক্তক্ষরণ হতে পারে। কম চর্বিযুক্ত দুধ ২ বছরের আগে নয় — শিশুর চর্বি দরকার।',
+             en:'As a main drink before 12 months it raises anaemia risk, being low in iron, and can cause microscopic intestinal blood loss. Skimmed or low-fat milk is not suitable before 2 years — babies need the fat.'},
+      alts:{bn:'১২ মাসের আগে: বুকের দুধ বা ফর্মুলা। দই ও ছানা ৬ মাস থেকেই দেওয়া যায়।',
+            en:'Before 12 months: breastmilk or formula. Yogurt and chana are fine from 6 months.'} },
+
+    { id:'juice', icon:'🧃', verdict:'no', minAge:12,
+      name:{bn:'ফলের জুস', en:'Fruit juice'},
+      head:{bn:'১ বছরের নিচে সুপারিশ করা হয় না; এরপরও প্রয়োজন নেই।',
+            en:'Not recommended under 12 months, and not needed after that either.'},
+      prep:{bn:'১ বছরের পর দিতে চাইলে: ঘরে তৈরি, চিনি ছাড়া, পানি মিশিয়ে পাতলা করে, খোলা কাপে, খাবারের সাথে।',
+            en:'If you do offer it after 12 months: home-made, unsweetened, diluted, in an open cup, with a meal.'},
+      serving:{bn:'১-৩ বছরে দিনে সর্বোচ্চ ১২০ মি.লি.।', en:'At most 120 ml a day between 1 and 3 years.'},
+      benefits:{bn:'গোটা ফলের তুলনায় কম — ফাইবার সম্পূর্ণ বাদ পড়ে যায়।',
+                en:'Less than whole fruit — the fibre is entirely lost.'},
+      risks:{bn:'ঘন চিনি ও অ্যাসিড দাঁতের ক্ষয় ঘটায়, বিশেষত বোতলে বা সারাদিন চুমুক দিলে। পেট ভরিয়ে দেয় বলে প্রকৃত খাবার কম খায়, এবং বেশি দিলে ডায়রিয়া হতে পারে।',
+             en:'Concentrated sugar and acid cause tooth decay, especially from a bottle or sipped all day. It fills the stomach so less real food is eaten, and too much causes diarrhoea.'},
+      alts:{bn:'গোটা ফল চটকে বা টুকরা করে, আর তেষ্টার জন্য পানি।',
+            en:'Whole fruit, mashed or in pieces, and water for thirst.'} },
+
+    { id:'softdrink', icon:'🥤', verdict:'no', minAge:0,
+      name:{bn:'কোমল পানীয় ও এনার্জি ড্রিংক', en:'Soft drinks and energy drinks'},
+      head:{bn:'না — শিশু বা টডলারের জন্য কোনোভাবেই উপযুক্ত নয়।',
+            en:'No — not appropriate for a baby or toddler at any age.'},
+      prep:{bn:'—', en:'—'}, serving:{bn:'—', en:'—'},
+      benefits:{bn:'কোনো উপকার নেই।', en:'None.'},
+      risks:{bn:'অত্যধিক চিনি, অ্যাসিড ও প্রায়ই ক্যাফেইন। দাঁতের ক্ষয়, ওজন সমস্যা ও খাবারে অরুচি তৈরি করে।',
+             en:'Heavy sugar, acid and often caffeine. Causes tooth decay, weight problems and loss of appetite for food.'},
+      alts:{bn:'পানি বা ডাবের পানি।', en:'Water or tender coconut water.'} },
+
+    { id:'wholenuts', icon:'🥜', verdict:'no', minAge:48,
+      name:{bn:'গোটা বাদাম', en:'Whole nuts'},
+      head:{bn:'প্রায় ৪-৫ বছর বয়সের আগে গোটা বা কুচি বাদাম নয়।',
+            en:'No whole or chopped nuts until around 4-5 years.'},
+      prep:{bn:'বাদামের পুষ্টি চাইলে মসৃণ পেস্ট আকারে দিন — পানি বা দুধে গুলে পাতলা করে।',
+            en:'For the nutrition, use a smooth butter thinned with water or milk instead.'},
+      serving:{bn:'পেস্ট আকারে ১-২ চা চামচ।', en:'1-2 teaspoons as thinned butter.'},
+      benefits:{bn:'প্রোটিন, স্বাস্থ্যকর চর্বি ও ভিটামিন ই — তবে পেস্ট আকারেই নিরাপদে পাওয়া যায়।',
+                en:'Protein, healthy fats and vitamin E — all safely available in butter form.'},
+      risks:{bn:'গোটা বাদাম গলায় আটকানোর সবচেয়ে বিপজ্জনক খাবারগুলোর একটি: শক্ত, গোলাকার এবং শ্বাসনালীর মাপের। চিবিয়ে ভাঙার দাঁত ও দক্ষতা ৪ বছরের আগে তৈরি হয় না।',
+             en:'Whole nuts are among the most dangerous choking foods: hard, round and airway-sized. The teeth and chewing skill to break them down are not there before about 4.'},
+      alts:{bn:'মসৃণ পিনাট, কাঠবাদাম বা কাজু পেস্ট (৬ মাস+, পাতলা করে)।',
+            en:'Smooth peanut, almond or cashew butter, thinned, from 6 months.'} },
+
+    { id:'popcorn', icon:'🍿', verdict:'no', minAge:48,
+      name:{bn:'পপকর্ন', en:'Popcorn'},
+      head:{bn:'৪ বছরের আগে নয়।', en:'Not before about 4 years.'},
+      prep:{bn:'—', en:'—'}, serving:{bn:'—', en:'—'},
+      benefits:{bn:'নেই বললেই চলে।', en:'Negligible.'},
+      risks:{bn:'হালকা, শুকনো ও অনিয়মিত আকৃতির — সহজে শ্বাসনালীতে ঢুকে যায় এবং না ফোটা দানা বিশেষভাবে বিপজ্জনক।',
+             en:'Light, dry and irregularly shaped — it inhales easily, and unpopped kernels are especially dangerous.'},
+      alts:{bn:'নরম সুজি বা ওটসের ফিঙ্গার, ভাপানো সবজির স্টিক।',
+            en:'Soft suji or oat fingers, steamed vegetable sticks.'} },
+
+    { id:'rawegg', icon:'🥚', verdict:'no', minAge:6,
+      name:{bn:'কাঁচা বা আধা-সেদ্ধ ডিম', en:'Raw or undercooked egg'},
+      head:{bn:'না — ডিম অবশ্যই সম্পূর্ণ সেদ্ধ হতে হবে।', en:'No — egg must be cooked right through.'},
+      prep:{bn:'কুসুম ও সাদা অংশ দুটোই শক্ত হওয়া পর্যন্ত রান্না করুন।',
+            en:'Cook until both the yolk and the white are firm.'},
+      serving:{bn:'সম্পূর্ণ সেদ্ধ ১/২ থেকে ১টি ডিম, ৬ মাস থেকে।', en:'Half to one fully cooked egg, from 6 months.'},
+      benefits:{bn:'সম্পূর্ণ রান্না করা ডিম চমৎকার প্রোটিন, আয়রন ও কোলিনের উৎস।',
+                en:'Fully cooked egg is an excellent source of protein, iron and choline.'},
+      risks:{bn:'কাঁচা বা তরল কুসুমে সালমোনেলার ঝুঁকি থাকে, যা শিশুর জন্য গুরুতর হতে পারে। ঘরে তৈরি মেয়োনিজ ও ডিমের ব্যাটার চাটাও এর মধ্যে পড়ে।',
+             en:'Raw or runny yolk carries a salmonella risk that can be serious in a baby. This includes home-made mayonnaise and licking raw batter.'},
+      alts:{bn:'শক্ত সেদ্ধ ডিম, অমলেট স্ট্রিপ বা ডিম-খিচুড়ি।',
+            en:'Hard-boiled egg, omelette strips or egg khichuri.'} },
+
+    { id:'packagedsnack', icon:'🍪', verdict:'care', minAge:12,
+      name:{bn:'প্যাকেটজাত স্ন্যাকস ও বিস্কুট', en:'Packaged snacks and biscuits'},
+      head:{bn:'নিয়মিত খাবার হিসেবে নয় — মাঝে মাঝে, সতর্কতার সাথে।',
+            en:'Not as a routine food — occasional, and with care.'},
+      prep:{bn:'লেবেল দেখুন: লবণ, চিনি ও পাম তেল প্রথম কয়েকটি উপকরণের মধ্যে থাকলে এড়িয়ে চলুন।',
+            en:'Read the label: avoid it if salt, sugar or palm oil are among the first few ingredients.'},
+      serving:{bn:'মাঝে মাঝে অল্প পরিমাণে, ১২ মাসের পর।', en:'Small amounts occasionally, after 12 months.'},
+      benefits:{bn:'সুবিধাজনক, কিন্তু পুষ্টিগত মূল্য কম।', en:'Convenient, but of little nutritional value.'},
+      risks:{bn:'"বেবি বিস্কুট" লেখা থাকলেও প্রায়ই যথেষ্ট চিনি ও লবণ থাকে। শক্ত বিস্কুট ভেঙে ধারালো টুকরা হয়ে গলায় আটকাতে পারে, এবং এতে অভ্যস্ত হলে ঘরের খাবারে অরুচি তৈরি হয়।',
+             en:'Even products labelled "baby biscuits" often carry meaningful sugar and salt. Hard biscuits snap into sharp pieces that can choke, and the habit displaces home food.'},
+      alts:{bn:'ঘরে তৈরি সুজি বা ওটসের ফিঙ্গার, ভাপানো সবজির স্টিক, ফলের টুকরা।',
+            en:'Home-made suji or oat fingers, steamed vegetable sticks, fruit pieces.'} },
+
+    { id:'water', icon:'💧', verdict:'care', minAge:6,
+      name:{bn:'পানি', en:'Water'},
+      head:{bn:'৬ মাস থেকে খোলা কাপে অল্প অল্প করে।', en:'From 6 months, small amounts in an open cup.'},
+      prep:{bn:'নিরাপদ পানি ফুটিয়ে ঠান্ডা করে দিন। ৬ মাসের নিচে বুকের দুধ বা ফর্মুলাই যথেষ্ট, বাড়তি পানি নয়।',
+            en:'Boil and cool safe water. Under 6 months, breastmilk or formula is enough — no extra water.'},
+      serving:{bn:'৬-১২ মাস: খাবারের সাথে দিনে ~৬০-১২০ মি.লি.। ১২ মাসের পর: দিনে ~৪-৬ কাপ।',
+               en:'6-12 months: about 60-120 ml a day with meals. After 12 months: about 4-6 cups a day.'},
+      benefits:{bn:'কোষ্ঠকাঠিন্য প্রতিরোধে সাহায্য করে এবং খোলা কাপে খাওয়ার দক্ষতা তৈরি করে।',
+                en:'Helps prevent constipation and builds open-cup drinking skill.'},
+      risks:{bn:'৬ মাসের নিচে অতিরিক্ত পানি বিপজ্জনক — এটি দুধের জায়গা নিয়ে নেয় এবং রক্তে সোডিয়াম কমিয়ে (water intoxication) খিঁচুনি পর্যন্ত ঘটাতে পারে।',
+             en:'Too much water under 6 months is dangerous — it displaces milk and can dilute blood sodium (water intoxication), even causing seizures.'},
+      alts:{bn:'৬ মাসের নিচে: শুধু বুকের দুধ বা ফর্মুলা।', en:'Under 6 months: breastmilk or formula only.'} },
+  ];
+
+  /* ---- Build the searchable index ------------------------------------
+     One entry per answerable item, drawn from FOODS where possible so the
+     catalogue stays the single source of truth. */
+  function index(){
+    const out = [];
+
+    FOODS.forEach(function(f){
+      out.push({
+        id: f.id, icon: f.icon, fromFoods: true,
+        name: { bn: f.name_bn, en: f.name_en },
+        /* Foods in the catalogue are all ones we recommend, so the default is
+           yes. But anything gated to 12 months or later is shown as "with
+           care" -- a green tick beside a food a 7-month-old must not have
+           reads as approval, whatever the age chip says next to it. */
+        verdict: f.minAge >= 12 ? 'care' : 'yes', minAge: f.minAge,
+        head: null,                                  /* generated below */
+        prep: { bn: f.serve_bn, en: f.serve_en },
+        risks: { bn: f.choke_bn, en: f.choke_en },
+        allergen: f.allergen,
+        terms: (ALIASES[f.id] || []).concat([f.name_bn, f.name_en]),
+      });
+    });
+
+    CURATED.forEach(function(c){
+      /* A curated answer replaces a catalogue one if the ids collide. */
+      const i = out.findIndex(x => x.id === c.id);
+      const entry = Object.assign({}, c, { fromFoods: false,
+        terms: (ALIASES[c.id] || []).concat([c.name.bn, c.name.en]) });
+      if(i > -1) out[i] = entry; else out.push(entry);
+    });
+
+    /* Seasonings answer the same question, so fold them in too. */
+    Extras.SEASONINGS.forEach(function(s){
+      if(out.some(x => x.id === s.id)) return;
+      out.push({
+        id: s.id, icon: s.icon, fromFoods: false, isSeasoning: true,
+        name: s.name, verdict: s.verdict,
+        minAge: /১২|12/.test(Util.t(s.age)) ? 12 : (/২ বছর|2 years/.test(Util.t(s.age)) ? 24 : 6),
+        head: s.age, prep: s.how, serving: s.amount, benefits: s.why,
+        risks: s.why, alts: null,
+        terms: (ALIASES[s.id] || []).concat([s.name.bn, s.name.en]),
+      });
+    });
+
+    return out;
+  }
+
+  let INDEX = null;
+  let recent = Util.load('recentLookups', []);
+
+  function norm(s){
+    return String(s || '').toLowerCase().replace(/[​-‍]/g,'').trim();
+  }
+
+  /* Score a match so exact names beat loose substring hits. */
+  function search(q){
+    if(!INDEX) INDEX = index();
+    const n = norm(q);
+    if(n.length < 1) return [];
+    const scored = [];
+    INDEX.forEach(function(e){
+      let best = 0;
+      e.terms.filter(Boolean).forEach(function(t){
+        const tn = norm(t);
+        if(!tn) return;
+        if(tn === n) best = Math.max(best, 100);
+        else if(tn.indexOf(n) === 0) best = Math.max(best, 80);
+        else if(tn.indexOf(n) > -1) best = Math.max(best, 60);
+        else if(n.indexOf(tn) > -1 && tn.length > 2) best = Math.max(best, 40);
+      });
+      if(best) scored.push({ e: e, score: best });
+    });
+    return scored.sort((a,b) => b.score - a.score || a.e.name.en.length - b.e.name.en.length)
+                 .slice(0, 8).map(x => x.e);
+  }
+
+  const V = {
+    yes:  { cls:'safe',   chip:'leaf',    icon:'✅', label:{bn:'হ্যাঁ, দেওয়া যাবে', en:'Yes, with the right prep'} },
+    care: { cls:'care',   chip:'mustard', icon:'⚠️', label:{bn:'সতর্কতার সাথে', en:'Yes, but with care'} },
+    no:   { cls:'danger', chip:'alert',   icon:'🚫', label:{bn:'এখনই নয়', en:'Not yet'} },
+  };
+
+  function ageLine(e){
+    if(e.minAge >= 48) return Util.tt('প্রায় ৪ বছর বয়সের পর','From about 4 years');
+    if(e.minAge >= 24) return Util.tt('২ বছর বয়সের পর','From 2 years');
+    if(e.minAge >= 12) return Util.tt('১২ মাস বয়সের পর','From 12 months');
+    return Util.num(e.minAge) + '+ ' + Util.tt('মাস','months');
+  }
+
+  function card(e){
+    const v = V[e.verdict] || V.yes;
+    const rows = [];
+    if(e.head)     rows.push([Util.tt('সংক্ষেপে','In short'), Util.t(e.head), false]);
+    if(e.prep)     rows.push([Util.tt('কীভাবে প্রস্তুত করবেন','How to prepare'), Util.t(e.prep), false]);
+    if(e.serving)  rows.push([Util.tt('পরিবেশন পরিমাণ','Serving size'), Util.t(e.serving), false]);
+    if(e.benefits) rows.push([Util.tt('উপকারিতা','Benefits'), Util.t(e.benefits), false]);
+    if(e.risks)    rows.push([Util.tt('ঝুঁকি ও সতর্কতা','Risks and precautions'), Util.t(e.risks), true]);
+    if(e.alts)     rows.push([Util.tt('বিকল্প','Safer alternatives'), Util.t(e.alts), false]);
+
+    return `<div class="lk-answer ${v.cls} anim-in">
+      <div class="lk-head">
+        <span class="lk-icon">${e.icon}</span>
+        <div>
+          <h3>${Util.t(e.name)}</h3>
+          <div class="chip-row" style="margin-top:6px;">
+            <span class="chip ${v.chip}">${v.icon} ${Util.t(v.label)}</span>
+            <span class="chip leaf">${ageLine(e)}</span>
+            ${e.allergen ? `<span class="chip alert">${Util.tt('অ্যালার্জেন','Allergen')}</span>` : ''}
+          </div>
+        </div>
+      </div>
+      ${rows.map(function(r){
+        return `<div class="v-row"><div class="v-k ${r[2] ? 'warn' : ''}">${r[0]}</div><p>${r[1]}</p></div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  /* ---- Rendering ---- */
+  function run(q){
+    const out = document.getElementById('lk-results');
+    if(!out) return;
+    const query = q === undefined ? (document.getElementById('lk-input') || {}).value : q;
+
+    if(!norm(query)){
+      out.innerHTML = suggestions();
+      return;
+    }
+    const hits = search(query);
+    if(!hits.length){
+      out.innerHTML = Util.empty('🔍',
+        Util.tt('এই খাবারটি এখনো তালিকায় নেই','That food is not in the list yet'),
+        Util.tt('বানান একটু বদলে দেখুন, অথবা বাংলা ও ইংরেজি দুইভাবেই লিখে দেখুন। তালিকায় না থাকলে নতুন খাবার দেওয়ার আগে সাধারণ নিয়ম মেনে চলুন: ভালোভাবে রান্না করুন, নরম করুন, ছোট গোল টুকরা এড়িয়ে চলুন এবং প্রথমবার অল্প পরিমাণে দিন।',
+                'Try a different spelling, or search in the other language. If it is genuinely not listed, fall back on the general rules: cook it well, make it soft, avoid small round pieces, and offer a small amount the first time.'));
+      return;
+    }
+    remember(hits[0].id);
+    out.innerHTML = hits.map(card).join('');
+  }
+
+  /* Quick-pick chips for the questions people actually ask most. */
+  const QUICK = ['honey','lychee','jackfruit','peanutbutter','cowmilkdrink','chocolate','tea','mushroom','dates','salt','water','egg'];
+
+  function suggestions(){
+    if(!INDEX) INDEX = index();
+    const chips = QUICK.map(function(id){
+      const e = INDEX.find(function(x){ return x.id === id; });
+      if(!e) return '';
+      return `<button class="lk-chip" onclick="Lookup.pick('${id}')">${e.icon} ${Util.t(e.name)}</button>`;
+    }).join('');
+
+    let html = `<div class="lk-suggest">
+      <div class="v-k">${Util.tt('সবচেয়ে বেশি জিজ্ঞাসা করা হয়','Most asked about')}</div>
+      <div class="lk-chips">${chips}</div>
+    </div>`;
+
+    const rec = recent.map(function(id){
+      return INDEX.find(function(x){ return x.id === id; });
+    }).filter(Boolean);
+    if(rec.length){
+      html += `<div class="lk-suggest">
+        <div class="v-k mut">${Util.tt('সম্প্রতি দেখা','Recently viewed')}</div>
+        <div class="lk-chips">${rec.map(function(e){
+          return `<button class="lk-chip" onclick="Lookup.pick('${e.id}')">${e.icon} ${Util.t(e.name)}</button>`;
+        }).join('')}</div>
+      </div>`;
+    }
+
+    html += Util.empty('❓',
+      Util.tt('যেকোনো খাবারের নাম লিখুন','Type any food name'),
+      Util.tt('বাংলা বা ইংরেজি — যেভাবে খুশি। যেমন: মধু, লিচু, কাঁঠাল, চা, peanut butter।',
+              'In Bangla or English, whichever you prefer. Try: honey, lychee, jackfruit, tea, peanut butter.'));
+    return html;
+  }
+
+  function pick(id){
+    if(!INDEX) INDEX = index();
+    const e = INDEX.find(function(x){ return x.id === id; });
+    if(!e) return;
+    const input = document.getElementById('lk-input');
+    if(input) input.value = Util.t(e.name);
+    remember(id);
+    const out = document.getElementById('lk-results');
+    if(out) out.innerHTML = card(e);
+  }
+
+  function remember(id){
+    recent = [id].concat(recent.filter(function(x){ return x !== id; })).slice(0, 8);
+    Util.save('recentLookups', recent);
+  }
+
+  function init(){
+    const input = document.getElementById('lk-input');
+    if(input && !input.dataset.wired){
+      /* Debounced so a long word does not re-render on every keystroke. */
+      let t = null;
+      input.addEventListener('input', function(){
+        clearTimeout(t);
+        t = setTimeout(function(){ run(); }, 140);
+      });
+      input.dataset.wired = '1';
+    }
+    run();
+  }
+
+  LANG_HOOKS.push(function(){
+    INDEX = null;                  /* names are language-dependent */
+    if(document.getElementById('lk-results')) run();
+  });
+
+  return { init, run, pick, search };
+})();
+
+
+/* =====================================================================
    BOOTSTRAP
    Wires the new modules into the existing app without altering any of
    the original functions. Three integration points:
@@ -4971,6 +5777,7 @@ const Backup = (function(){
     milestones: function(){ Milestones.init(); },
     shopping:   function(){ Shopping.init(); },
     blwpro:     function(){ BLWPro.init(); },
+    lookup:     function(){ Lookup.init(); },
     /* The Tracker tab is original markup, but its data-safety panel is new. */
     tracker:    function(){ Backup.init(); },
   };
@@ -5016,8 +5823,38 @@ const Backup = (function(){
     if(m) m.classList.remove('lg');
   };
 
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restore);
-  else restore();
+  /* --- 4. Plate wedges: make them real controls -----------------------
+     The wedges carry onclick but were plain <div>s, so keyboard and screen
+     reader users could not reach them. Upgrading here rather than in the
+     markup keeps it in one place and applies to all four. */
+  function upgradeWedges(){
+    const wedges = document.querySelectorAll('.wedge');
+    wedges.forEach(function(w){
+      w.setAttribute('role', 'button');
+      w.setAttribute('tabindex', '0');
+      w.setAttribute('aria-pressed', 'false');
+      /* No aria-label: the hidden language span is display:none, so the
+         accessible name computes from whichever label is visible and follows
+         the language toggle for free. A static label would freeze in Bangla. */
+      w.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleCat(w.dataset.cat); }
+      });
+    });
+    /* Keep aria-pressed in step with the existing .active class. */
+    const originalToggleCat = toggleCat;
+    toggleCat = function(cat){
+      originalToggleCat(cat);
+      wedges.forEach(function(w){
+        w.setAttribute('aria-pressed', w.classList.contains('active') ? 'true' : 'false');
+      });
+    };
+  }
+
+  /* Extras.install() already ran at module load, so the catalogue is
+     complete before this point. */
+  function boot(){ upgradeWedges(); restore(); }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 })();
 
 </script>
