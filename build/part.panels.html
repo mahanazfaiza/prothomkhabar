@@ -1,0 +1,151 @@
+<!-- =====================================================================
+     v2 TAB PANELS
+     Each panel is a thin shell; content is rendered by the modules in the
+     script block so that every string flows through the same bilingual
+     helper and nothing has to be duplicated in markup.
+     ===================================================================== -->
+
+<!-- ============ 1. MEAL PLANNER ============ -->
+<div id="tab-planner" class="tabpanel">
+  <section class="section">
+    <div class="mod-hero">
+      <h2><span lang-bn>🍱 ব্যক্তিগত মিল প্ল্যানার</span><span lang-en>🍱 Personalized Meal Planner</span></h2>
+      <p lang-bn>বাচ্চার বয়স, খাওয়ানোর পদ্ধতি, খাদ্যাভ্যাস, অ্যালার্জি ও বাজেট অনুযায়ী একদিনের সম্পূর্ণ পরিকল্পনা তৈরি করুন। প্রতিটি খাবারের রেসিপি, টেক্সচার, পরিমাণ ও পুষ্টিগুণ দেখানো হবে।</p>
+      <p lang-en>Build a full day's plan around your baby's age, feeding method, diet, allergies and budget. Every meal comes with a recipe, texture, portion size and nutrition notes.</p>
+    </div>
+
+    <div class="v-form" id="planner-form">
+      <div class="v-field">
+        <label for="pl-age"><span lang-bn>বাচ্চার বয়স</span><span lang-en>Baby's age</span></label>
+        <select id="pl-age"></select>
+      </div>
+      <div class="v-field">
+        <label for="pl-method"><span lang-bn>খাওয়ানোর পদ্ধতি</span><span lang-en>Feeding method</span></label>
+        <select id="pl-method"></select>
+      </div>
+      <div class="v-field">
+        <label for="pl-diet"><span lang-bn>খাদ্যাভ্যাস</span><span lang-en>Diet</span></label>
+        <select id="pl-diet"></select>
+      </div>
+      <div class="v-field">
+        <label for="pl-budget"><span lang-bn>বাজেট</span><span lang-en>Budget</span></label>
+        <select id="pl-budget"></select>
+      </div>
+      <div class="v-field" style="grid-column:1/-1;">
+        <label><span lang-bn>যেসব খাবারে অ্যালার্জি আছে (বাদ দেওয়া হবে)</span><span lang-en>Food allergies to exclude</span></label>
+        <div class="v-check-grid" id="pl-allergies"></div>
+      </div>
+    </div>
+
+    <div class="plan-actions">
+      <button class="v-btn" id="pl-generate" onclick="Planner.generate()">
+        <span lang-bn>✨ পরিকল্পনা তৈরি করুন</span><span lang-en>✨ Generate plan</span>
+      </button>
+      <button class="v-btn ghost" onclick="Planner.generate(true)">
+        <span lang-bn>🔄 আরেকটি পরিকল্পনা</span><span lang-en>🔄 Generate another plan</span>
+      </button>
+      <button class="v-btn ghost" onclick="window.print()">
+        <span lang-bn>🖨 প্রিন্ট</span><span lang-en>🖨 Print</span>
+      </button>
+    </div>
+
+    <div id="planner-output"></div>
+
+    <p class="med-note">
+      <span lang-bn>⚠ এই পরিকল্পনা সাধারণ শিক্ষামূলক নির্দেশনা (WHO/UNICEF-এর পরিপূরক খাদ্য নির্দেশিকার ভিত্তিতে) — এটি ব্যক্তিগত চিকিৎসা বা পুষ্টি পরামর্শের বিকল্প নয়। বাচ্চার ওজন কম হলে, অ্যালার্জির ইতিহাস থাকলে বা কোনো বিশেষ শারীরিক অবস্থা থাকলে অবশ্যই শিশু বিশেষজ্ঞ বা পুষ্টিবিদের পরামর্শ নিন।</span>
+      <span lang-en>⚠ This plan is general educational guidance based on WHO/UNICEF complementary feeding recommendations — it is not personalized medical or nutrition advice. If your baby has poor weight gain, an allergy history or any medical condition, consult a pediatrician or dietitian.</span>
+    </p>
+  </section>
+</div><!-- /tab-planner -->
+
+<!-- ============ 2. RECIPE LIBRARY ============ -->
+<div id="tab-recipes" class="tabpanel">
+  <section class="section">
+    <div class="mod-hero">
+      <h2><span lang-bn>🍲 বাংলাদেশি রেসিপি লাইব্রেরি</span><span lang-en>🍲 Bangladeshi Recipe Library</span></h2>
+      <p lang-bn>দেশি বাজারে সহজলভ্য উপকরণ দিয়ে তৈরি বয়স-উপযোগী রেসিপি — সংরক্ষণ, ফ্রিজিং ও গরম করার নির্দেশনাসহ।</p>
+      <p lang-en>Age-appropriate recipes built from ingredients you can buy at any local bazaar, with storage, freezing and reheating instructions.</p>
+    </div>
+
+    <div class="section-head" style="padding:0;">
+      <div class="filters" id="rc-age-filters"></div>
+    </div>
+    <div class="subnav" id="rc-cat-filters" style="margin-top:14px;"></div>
+
+    <div class="v-grid" id="recipe-grid"></div>
+    <div id="recipe-empty"></div>
+  </section>
+</div><!-- /tab-recipes -->
+
+<!-- ============ 3/4/9/11/12. AGE GUIDES ============ -->
+<div id="tab-guides" class="tabpanel">
+  <section class="section">
+    <div class="mod-hero">
+      <h2><span lang-bn>📏 বয়সভিত্তিক গাইড</span><span lang-en>📏 Age &amp; Stage Guides</span></h2>
+      <p lang-bn>পরিমাণ, টেক্সচার, দুধের নির্ভরতা, দাঁত ওঠার সময়ের খাবার এবং স্ক্রিন-মুক্ত খাওয়ার অভ্যাস — সবকিছু এক জায়গায়।</p>
+      <p lang-en>Portions, textures, milk dependency, teething foods and screen-free mealtimes — all in one place.</p>
+    </div>
+
+    <div class="subnav" id="guides-subnav">
+      <button class="active" data-sub="portions" onclick="Guides.show('portions')"><span lang-bn>🥣 পরিমাণ</span><span lang-en>🥣 Portions</span></button>
+      <button data-sub="texture" onclick="Guides.show('texture')"><span lang-bn>🌀 টেক্সচার</span><span lang-en>🌀 Texture</span></button>
+      <button data-sub="milk" onclick="Guides.show('milk')"><span lang-bn>🍼 দুধ বনাম সলিড</span><span lang-en>🍼 Milk vs Solids</span></button>
+      <button data-sub="teething" onclick="Guides.show('teething')"><span lang-bn>🦷 দাঁত ওঠা</span><span lang-en>🦷 Teething</span></button>
+      <button data-sub="screens" onclick="Guides.show('screens')"><span lang-bn>📵 স্ক্রিন-মুক্ত</span><span lang-en>📵 Screen-free</span></button>
+    </div>
+
+    <div id="sub-portions" class="subpanel active"></div>
+    <div id="sub-texture" class="subpanel"></div>
+    <div id="sub-milk" class="subpanel"></div>
+    <div id="sub-teething" class="subpanel"></div>
+    <div id="sub-screens" class="subpanel"></div>
+  </section>
+</div><!-- /tab-guides -->
+
+<!-- ============ 5. FIRST AID ============ -->
+<div id="tab-firstaid" class="tabpanel">
+  <section class="section" id="firstaid-body"></section>
+</div><!-- /tab-firstaid -->
+
+<!-- ============ 6. MILESTONES ============ -->
+<div id="tab-milestones" class="tabpanel">
+  <section class="section">
+    <div class="mod-hero">
+      <h2><span lang-bn>🎯 বৃদ্ধি ও খাওয়ার মাইলস্টোন</span><span lang-en>🎯 Growth &amp; Feeding Milestones</span></h2>
+      <p lang-bn>বাচ্চা যেসব দক্ষতা অর্জন করেছে সেগুলোতে টিক দিন। অগ্রগতি আপনার ডিভাইসেই সংরক্ষিত থাকবে।</p>
+      <p lang-en>Tick off the skills your baby has reached. Progress is saved locally on your own device.</p>
+    </div>
+    <div id="milestones-body"></div>
+  </section>
+</div><!-- /tab-milestones -->
+
+<!-- ============ 7 & 8. SHOPPING ============ -->
+<div id="tab-shopping" class="tabpanel">
+  <section class="section">
+    <div class="mod-hero">
+      <h2><span lang-bn>🛒 সলিড শুরুর আগে কেনাকাটা</span><span lang-en>🛒 Before-Solids Shopping Guide</span></h2>
+      <p lang-bn>কোনটা সত্যিই দরকার, কোনটা ঐচ্ছিক — অগ্রাধিকার রেটিং, আনুমানিক বাংলাদেশি দাম, পরিষ্কারের টিপস ও সাশ্রয়ী বিকল্পসহ।</p>
+      <p lang-en>What you actually need versus what is optional — with priority ratings, approximate Bangladeshi prices, cleaning tips and cheaper substitutes.</p>
+    </div>
+
+    <div class="subnav" id="shop-subnav">
+      <button class="active" data-sub="gear" onclick="Shopping.show('gear')"><span lang-bn>🍽 জিনিসপত্র</span><span lang-en>🍽 Gear list</span></button>
+      <button data-sub="sites" onclick="Shopping.show('sites')"><span lang-bn>🏬 কোথায় কিনবেন</span><span lang-en>🏬 Where to buy</span></button>
+    </div>
+
+    <div id="sub-gear" class="subpanel active"></div>
+    <div id="sub-sites" class="subpanel"></div>
+  </section>
+</div><!-- /tab-shopping -->
+
+<!-- ============ 10. BLW MASTERY ============ -->
+<div id="tab-blwpro" class="tabpanel">
+  <section class="section">
+    <div class="mod-hero">
+      <h2><span lang-bn>👐 BLW-তে দক্ষ হয়ে ওঠার সম্পূর্ণ গাইড</span><span lang-en>👐 How to Excel at Baby-Led Weaning</span></h2>
+      <p lang-bn>মানসিক প্রস্তুতি থেকে শুরু করে ভয় কাটানো, এলোমেলো কমানো, খাবার ছুঁড়ে ফেলা সামলানো, ভ্রমণ ও রেস্টুরেন্টে খাওয়ানো — ২১টি বিষয়ের ব্যবহারিক গাইড ও চেকলিস্ট।</p>
+      <p lang-en>Twenty-one practical topics with checklists — from mental preparation and managing fear, to reducing mess, handling food throwing, travel and restaurant feeding.</p>
+    </div>
+    <div id="blwpro-body"></div>
+  </section>
+</div><!-- /tab-blwpro -->

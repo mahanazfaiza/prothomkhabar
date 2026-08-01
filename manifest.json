@@ -1,0 +1,19 @@
+{
+  "name": "প্রথম খাবার — Prothom Khabar",
+  "short_name": "প্রথম খাবার",
+  "description": "বাচ্চার সলিড খাবার শুরুর সম্পূর্ণ গাইড — খাবার তালিকা, মিল প্ল্যানার, রেসিপি, ফার্স্ট এইড ও ট্র্যাকার।",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FBF3E4",
+  "theme_color": "#FBF3E4",
+  "lang": "bn",
+  "dir": "ltr",
+  "categories": ["health", "lifestyle", "education"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
