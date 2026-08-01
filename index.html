@@ -1963,6 +1963,15 @@ const FOODS = [
 ];
 
 let state = { lang:'bn', age:0, cat:null, tier:'' };
+
+/* v2: format a number in the active language's digits.
+   Bengali "৪" and Latin "8" look almost the same, so mixing Latin digits into
+   Bengali text can be misread -- an age badge is not a place for ambiguity. */
+const BN_DIGITS = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+function bnNum(n){
+  if(state.lang !== 'bn') return String(n);
+  return String(n).replace(/[0-9]/g, function(d){ return BN_DIGITS[+d]; });
+}
 const TIER_LABEL = {
   budget:  { bn:'৳ সাশ্রয়ী', en:'৳ Budget' },
   mid:     { bn:'৳৳ মাঝারি', en:'৳৳ Mid-range' },
@@ -2021,7 +2030,7 @@ function matches(f){
 
 function render(){
   const list = FOODS.filter(matches);
-  document.getElementById('count').textContent = list.length;
+  document.getElementById('count').textContent = bnNum(list.length);
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
   document.getElementById('empty').style.display = list.length ? 'none' : 'block';
@@ -2034,7 +2043,7 @@ function render(){
       <h3>${state.lang==='bn' ? f.name_bn : f.name_en}</h3>
       <div class="en-name">${state.lang==='bn' ? f.name_en : f.name_bn}</div>
       <div class="meta">
-        <span class="tag age">${f.minAge}+ ${state.lang==='bn' ? 'মাস' : 'mo'}</span>
+        <span class="tag age">${bnNum(f.minAge)}+ ${state.lang==='bn' ? 'মাস' : 'mo'}</span>
         <span class="tag tier-${f.tier}">${state.lang==='bn' ? TIER_LABEL[f.tier].bn : TIER_LABEL[f.tier].en}</span>
         ${f.allergen ? `<span class="tag allergen">${state.lang==='bn' ? 'অ্যালার্জেন' : 'Allergen'}</span>` : ''}
       </div>`;
@@ -2048,7 +2057,7 @@ function openModal(f){
     <button class="close" onclick="closeModal()">&times;</button>
     <div class="icon-lg">${f.icon}</div>
     <h3>${state.lang==='bn' ? f.name_bn : f.name_en}</h3>
-    <div class="en-name">${state.lang==='bn' ? f.name_en : f.name_bn} · ${f.minAge}+ ${state.lang==='bn' ? 'মাস বয়স থেকে' : 'months'}</div>
+    <div class="en-name">${state.lang==='bn' ? f.name_en : f.name_bn} · ${bnNum(f.minAge)}+ ${state.lang==='bn' ? 'মাস বয়স থেকে' : 'months'}</div>
     <div class="row">
       <div class="k">${state.lang==='bn' ? 'কীভাবে পরিবেশন করবেন' : 'How to serve'}</div>
       <p>${state.lang==='bn' ? f.serve_bn : f.serve_en}</p>
@@ -2099,7 +2108,7 @@ function populateFoodSelect(){
   sorted.forEach(f=>{
     const opt = document.createElement('option');
     opt.value = f.id;
-    opt.textContent = (state.lang==='bn' ? f.name_bn : f.name_en) + ' (' + f.minAge + '+)';
+    opt.textContent = (state.lang==='bn' ? f.name_bn : f.name_en) + ' (' + bnNum(f.minAge) + '+)';
     sel.appendChild(opt);
   });
   if(current) sel.value = current;
@@ -2163,8 +2172,8 @@ function renderTracker(){
       card.className = 'streak-card' + (hasIssue ? ' issue' : '');
       card.innerHTML = `
         <div class="sc-name">${foodName(fid)}</div>
-        <div class="sc-meta">${state.lang==='bn' ? 'মোট' : 'Total'}: ${entries.length}× · ${state.lang==='bn' ? 'সর্বশেষ' : 'Last'}: ${lastDate}</div>
-        <div class="sc-streak">🔥 ${streak} ${state.lang==='bn' ? 'দিন পরপর' : (streak===1?'day streak':'day streak')}</div>
+        <div class="sc-meta">${state.lang==='bn' ? 'মোট' : 'Total'}: ${bnNum(entries.length)}× · ${state.lang==='bn' ? 'সর্বশেষ' : 'Last'}: ${bnNum(lastDate)}</div>
+        <div class="sc-streak">🔥 ${bnNum(streak)} ${state.lang==='bn' ? 'দিন পরপর' : (streak===1?'day streak':'day streak')}</div>
         ${hasIssue ? `<div class="sc-meta" style="color:var(--alert); margin-top:4px;">⚠ ${state.lang==='bn' ? 'প্রতিক্রিয়া লক্ষ্য করা গেছে' : 'Reaction noted'}</div>` : ''}
       `;
       summaryEl.appendChild(card);
@@ -2179,7 +2188,7 @@ function renderTracker(){
       const row = document.createElement('div');
       row.className = 'log-entry' + (e.issue ? ' issue' : '');
       row.innerHTML = `
-        <span><b>${foodName(e.foodId)}</b> — ${e.date} ${e.issue ? '⚠' : ''}</span>
+        <span><b>${foodName(e.foodId)}</b> — ${bnNum(e.date)} ${e.issue ? '⚠' : ''}</span>
         <span class="le-note">${e.note ? e.note : ''}</span>
         <button onclick="deleteLogEntry(${e.id})" style="border:none;background:none;cursor:pointer;color:var(--ink-soft);">✕</button>
       `;
@@ -2252,13 +2261,12 @@ const Util = (function(){
     catch(e){ return false; }
   }
 
-  /* Bangla numerals — used for age badges and counts so numbers match the
-     surrounding script when the app is in Bangla. */
-  const BN_DIGITS = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
-  function num(n){
-    if(state.lang !== 'bn') return String(n);
-    return String(n).replace(/[0-9]/g, d => BN_DIGITS[+d]);
-  }
+  /* Bangla numerals — every number shown in Bengali mode goes through this.
+     Delegates to bnNum(), declared alongside `state` in the original script,
+     so there is exactly one implementation shared by the v1 and v2 code.
+     This matters: Bengali "৪" and Latin "8" are near-identical glyphs, so a
+     stray Latin digit in Bengali text can be read as the wrong number. */
+  function num(n){ return bnNum(n); }
 
   /* Deterministic-ish shuffle helper so "generate another plan" varies. */
   function pick(arr, seedShift){
@@ -3997,7 +4005,7 @@ const Milestones = (function(){
              onkeypress="if(event.key==='Enter'||event.key===' '){event.preventDefault();Milestones.toggle('${m.id}');}">
           <div class="ms-box">${isDone ? '✓' : ''}</div>
           <div>
-            <div class="ms-t">${Util.t(m.t)} <span class="chip leaf">${m.age} ${Util.tt('মাস','mo')}</span></div>
+            <div class="ms-t">${Util.t(m.t)} <span class="chip leaf">${Util.num(m.age)} ${Util.tt('মাস','mo')}</span></div>
             <div class="ms-d">${Util.t(m.d)}</div>
             ${isDone ? `<div class="v-small" style="margin-top:5px;">✅ ${Util.tt('চিহ্নিত','Marked')}: ${done[m.id]}</div>` : ''}
           </div>
