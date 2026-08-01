@@ -42,6 +42,13 @@
     font-display: swap;
   }
   :root{
+    /* Accessible member of the mustard family: 5.51:1 on white,
+       5.00:1 on paper, 4.53:1 on paper-dim. Used wherever mustard
+       carries text or a meaningful icon. */
+    --gold-text: #8F5F0F;
+    /* Perceivable neutral for 'empty' states such as unfilled stars,
+       which must still meet the 3:1 non-text contrast rule. */
+    --line-strong: #8C8477;
     --paper: #FBF3E4;
     --paper-dim: #F3E8D2;
     --ink: #1F2A44;
@@ -151,10 +158,7 @@
   }
   .wedge:hover{ filter:brightness(1.08); }
   .wedge.active{ filter: saturate(1.3); transform: scale(1.015); }
-  .wedge span{
-    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans', sans-serif; font-weight:600; font-size:0.72rem; color:#fff;
-    padding-bottom: 14%; text-shadow: 0 1px 3px rgba(0,0,0,0.25);
-  }
+
   .thala-center{
     position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
     width:34%; height:34%; border-radius:50%; background:#fff;
@@ -199,7 +203,7 @@
   .tag.age{ background:#EAF1E7; color: var(--leaf); }
   .tag.allergen{ background:#F7E3DC; color: var(--alert); }
   .tag.tier-budget{ background:#EAF1E7; color: var(--leaf); }
-  .tag.tier-mid{ background:#FBEFD9; color: var(--mustard-deep); }
+  .tag.tier-mid{ background:#FBEFD9; color: var(--gold-text); }
   .tag.tier-premium{ background:#EFE6F3; color: #6B3E7A; }
 
   .empty{ color: var(--ink-soft); font-style:italic; padding: 30px 0; }
@@ -217,7 +221,9 @@
   .modal .close{
     position:absolute; top:16px; right:18px; border:none; background:none; font-size:1.4rem;
     cursor:pointer; color: var(--ink-soft);
+    width:34px; height:34px; border-radius:10px;
   }
+  .modal .close:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
   .modal .icon-lg{ font-size:2.6rem; }
   .modal h3{ font-size:1.4rem; margin-top:6px; }
   .modal .row{ margin-top:16px; padding-top:16px; border-top:1px solid var(--line); }
@@ -237,6 +243,8 @@
   .tabbar{
     display:flex; gap:6px; padding: 14px 6vw 0; flex-wrap:wrap;
     border-bottom: 1px solid var(--line);
+    -webkit-overflow-scrolling: touch;
+    background: var(--paper);
   }
   .tab-btn{
     padding:10px 18px; border:none; background:none; cursor:pointer;
@@ -305,7 +313,7 @@
   .streak-card.issue{ border-color:#E8B9A8; background:#FDF4F0; }
   .streak-card .sc-name{ font-weight:700; font-size:1rem; }
   .streak-card .sc-meta{ font-size:0.8rem; color: var(--ink-soft); margin-top:6px; }
-  .streak-card .sc-streak{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-size:1.4rem; color: var(--mustard-deep); margin-top:8px; }
+  .streak-card .sc-streak{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-size:1.4rem; color: var(--gold-text); margin-top:8px; }
   .tracker-h3{ font-size:1.1rem; margin-bottom:10px; }
   .tracker-log{ display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
   .log-entry{
@@ -331,6 +339,39 @@
   }
 
   /* =====================================================================
+     ACCESSIBILITY & POLISH PASS (brief parts 9-10)
+     ===================================================================== */
+
+  /* --gold-text is the mustard family darkened until it clears WCAG AA on
+     every background this app uses:
+       white 5.51:1 · paper 5.00:1 · paper-dim 4.53:1 · chip tint 4.84:1
+     --mustard (2.94:1) and --mustard-deep (4.32:1) both failed as text.
+     They are still used for fills, bars and borders, where the contrast
+     rule does not apply -- only text and meaningful icons move. */
+  /* Long card grids: let the browser skip layout for what is off-screen.
+     contain-intrinsic-size keeps the scrollbar honest while it does. */
+  .grid, .v-grid, .plan-day, .wk-grid{ content-visibility: auto; contain-intrinsic-size: auto 400px; }
+
+  /* Tab bar scroll affordance. With 14 tabs there is always more to the
+     right on a phone, and a plain overflow gives no hint that it scrolls. */
+  @media (max-width: 900px){
+    .tabbar{
+      position: sticky; top: 0; z-index: 40;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 26px), transparent 100%);
+              mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 26px), transparent 100%);
+    }
+  }
+
+  /* The modal itself takes focus programmatically; no ring needed on it. */
+  .modal:focus{ outline: none; }
+
+  /* Respect reduced-motion for the bars and charts added in v2. */
+  @media (prefers-reduced-motion: reduce){
+    .progress-bar span, .wk-bar, .split-bar .sb, .g-line, .g-dot{ transition: none !important; }
+    .anim-in, .pop-in{ animation: none !important; }
+  }
+
+  /* =====================================================================
      ==  v2 EXTENSION STYLES  ============================================
      All new modules reuse the existing design tokens declared in :root.
      No existing rule above this line is modified or overridden.
@@ -340,7 +381,6 @@
      The tab bar now holds 10 tabs. On desktop it still wraps exactly as
      before; below 900px it becomes a single swipeable row so it never
      eats half the viewport on a phone. */
-  .tabbar{ -webkit-overflow-scrolling: touch; }
   @media (max-width: 900px){
     .tabbar{
       flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden;
@@ -370,7 +410,6 @@
   /* Responsive auto grids */
   .v-grid{ display:grid; gap:16px; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); }
   .v-grid.wide{ grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); }
-  .v-grid.narrow{ grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); }
 
   /* Small uppercase key label, same visual language as .modal .row .k */
   .v-k{
@@ -391,9 +430,8 @@
     font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; background: var(--paper-dim); color: var(--ink-soft);
   }
   .chip.leaf{ background:#EAF1E7; color:var(--leaf); }
-  .chip.mustard{ background:#FBEFD9; color:var(--mustard-deep); }
+  .chip.mustard{ background:#FBEFD9; color:var(--gold-text); }
   .chip.alert{ background:#F7E3DC; color:var(--alert); }
-  .chip.plum{ background:#EFE6F3; color:#6B3E7A; }
   .chip-row{ display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
 
   /* Buttons — primary matches the hero search button, ghost matches .filters */
@@ -456,7 +494,7 @@
   }
   .acc > summary::-webkit-details-marker{ display:none; }
   .acc > summary::after{
-    content:'+'; font-size:1.3rem; color: var(--mustard-deep); font-weight:700; flex:0 0 auto;
+    content:'+'; font-size:1.3rem; color: var(--gold-text); font-weight:700; flex:0 0 auto;
     transition: transform 0.18s ease;
   }
   .acc[open] > summary::after{ content:'−'; }
@@ -498,7 +536,7 @@
   .meal-card:hover{ transform: translateY(-2px); box-shadow: 0 12px 24px -16px rgba(31,42,68,0.28); }
   .meal-card .slot{
     font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em;
-    font-weight:700; color: var(--mustard-deep);
+    font-weight:700; color: var(--gold-text);
   }
   .meal-card .dish{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-weight:700; font-size:1.12rem; margin:4px 0 2px; display:flex; gap:8px; align-items:center; }
   .meal-card .dish .mi{ font-size:1.5rem; }
@@ -529,7 +567,6 @@
   .recipe-card .icon{ font-size:2rem; }
   .recipe-card h3{ font-size:1.05rem; margin-top:8px; }
   .recipe-card .rc-sub{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-size:0.75rem; color: var(--ink-soft); }
-  .recipe-card .rc-time{ font-size:0.8rem; color: var(--ink-soft); margin-top:8px; }
   .modal ol.steps{ margin:6px 0 0; padding-left:20px; }
   .modal ol.steps li{ margin-bottom:8px; font-size:0.92rem; }
   .modal ul.plain{ margin:6px 0 0; padding-left:20px; }
@@ -583,7 +620,7 @@
   }
   .tl-head:hover{ background: var(--paper-dim); }
   .tl-head .tl-t{ font-family: 'PK Bangla', 'Noto Sans Bengali', 'Baloo Da 2',sans-serif; font-weight:700; font-size:1rem; }
-  .tl-head .tl-age{ font-size:0.78rem; color: var(--mustard-deep); font-weight:700; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; }
+  .tl-head .tl-age{ font-size:0.78rem; color: var(--gold-text); font-weight:700; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; }
   .tl-body{
     display:none; background: var(--paper-dim); border:1px solid var(--line); border-top:none;
     border-radius: 0 0 14px 14px; padding:16px 18px; margin-top:-8px;
@@ -691,8 +728,8 @@
   }
   .gear-body{ padding:16px; flex:1; display:flex; flex-direction:column; }
   .gear-body h3{ font-size:1rem; }
-  .gear-stars{ color: var(--mustard); font-size:0.9rem; letter-spacing:1px; margin-top:4px; }
-  .gear-stars .dim{ color: var(--line); }
+  .gear-stars{ color: var(--gold-text); font-size:0.9rem; letter-spacing:1px; margin-top:4px; }
+  .gear-stars .dim{ color: var(--line-strong); }
   .gear-price{
     font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans',sans-serif; font-weight:700; font-size:0.85rem; color: var(--leaf); margin-top:8px;
   }
@@ -775,7 +812,7 @@
     margin-top:12px; padding:11px 16px; border-radius:12px; font-size:0.88rem; line-height:1.45;
   }
   .bk-flash.ok{ background:#EAF1E7; color: var(--leaf); }
-  .bk-flash.warn{ background:#FBEFD9; color: var(--mustard-deep); }
+  .bk-flash.warn{ background:#FBEFD9; color: var(--gold-text); }
   .bk-flash.err{ background:#F7E3DC; color: var(--alert); }
 
   /* =====================================================================
@@ -792,10 +829,12 @@
      so nothing overlaps and nothing is clipped.
      ===================================================================== */
   .wedge span{
+    /* Sole declaration for this selector — the original rule in base.html is
+       removed by splice.py, since it only pushed labels to the wrong place. */
+    font-family: 'PK Bangla', 'Noto Sans Bengali', 'Work Sans', sans-serif; font-weight:600; color:#fff;
     position: absolute;
     left: var(--lx); top: var(--ly);
     transform: translate(-50%, -50%);
-    padding-bottom: 0;                       /* was pushing labels to the rim */
     font-size: clamp(0.62rem, 2.1vw, 0.78rem);
     line-height: 1.15;
     white-space: nowrap;
@@ -929,11 +968,11 @@
   .fav-star{
     position:absolute; top:10px; right:10px; z-index:2;
     border:none; background:none; cursor:pointer; line-height:1;
-    font-size:1.35rem; color:var(--line); padding:4px; border-radius:8px;
+    font-size:1.35rem; color:var(--line-strong); padding:4px; border-radius:8px;
     transition:color .15s ease, transform .12s ease;
   }
-  .fav-star:hover{ color:var(--mustard); transform:scale(1.15); }
-  .fav-star.on{ color:var(--mustard-deep); }
+  .fav-star:hover{ color:var(--gold-text); transform:scale(1.15); }
+  .fav-star.on{ color:var(--gold-text); }
   .fav-star:focus-visible{ outline:2px solid var(--mustard-deep); outline-offset:1px; }
   @media (max-width:480px){ .wk-grid{ grid-template-columns:1fr 1fr; } .wk-day{ padding:11px; } }
 
@@ -1169,8 +1208,8 @@
     <p class="tracker-sub" lang-en>Keep track of what baby ate and when — including how many consecutive days the same food has been served.</p>
 
     <div class="log-form">
-      <select id="log-food"></select>
-      <input type="date" id="log-date">
+      <select id="log-food" aria-label="খাবার বাছাই করুন / Choose a food"></select>
+      <input type="date" id="log-date" aria-label="তারিখ / Date">
       <label class="issue-check"><input type="checkbox" id="log-issue"> <span lang-bn>প্রতিক্রিয়া/সমস্যা দেখা গেছে</span><span lang-en>Reaction/issue noticed</span></label>
       <input type="text" id="log-note" placeholder="নোট (ঐচ্ছিক) / Note (optional)">
       <button onclick="addLogEntry()"><span lang-bn>যোগ করুন</span><span lang-en>Add entry</span></button>
@@ -2591,8 +2630,14 @@ const Util = (function(){
 
   /* Star rating markup for the shopping guide (filled + dimmed). */
   function stars(n){
-    return '<span class="gear-stars">' + '★'.repeat(n) +
-           '<span class="dim">' + '★'.repeat(5-n) + '</span></span>';
+    /* The glyphs convey the priority, so they carry a text equivalent and are
+       hidden from assistive tech -- a screen reader hears "priority 4 of 5"
+       rather than eight identical star characters. */
+    const label = tt('অগ্রাধিকার ' + num(n) + '/' + num(5),
+                     'Priority ' + n + ' out of 5');
+    return '<span class="gear-stars" role="img" aria-label="' + label + '">' +
+           '<span aria-hidden="true">' + '★'.repeat(n) +
+           '<span class="dim">' + '★'.repeat(5-n) + '</span></span></span>';
   }
 
   /* Reusable collapsible section. */
@@ -3559,7 +3604,7 @@ const Recipes = (function(){
         <button class="fav-star${Favourites.has(r.id) ? ' on' : ''}"
                 onclick="Favourites.toggle('${r.id}', event)"
                 aria-label="${Util.tt('প্রিয় তালিকায় রাখুন','Save to favourites')}"
-                aria-pressed="${Favourites.has(r.id)}">${Favourites.has(r.id) ? '★' : '☆'}</button>
+                aria-pressed="${Favourites.has(r.id)}"><span aria-hidden="true">${Favourites.has(r.id) ? '★' : '☆'}</span></button>
         <div class="icon">${r.icon}</div>
         <h3>${Util.t(r.name)}</h3>
         <div class="rc-sub">${r.cats.slice(0,2).map(c=>{
@@ -3632,6 +3677,10 @@ const Recipes = (function(){
       <p class="v-small" style="margin-top:16px;">${Util.tt('সবসময় সোজা হয়ে বসিয়ে, সার্বক্ষণিক তদারকিতে খাওয়ান। খাবার পরিবেশনের আগে নিজে তাপমাত্রা পরীক্ষা করুন।','Always feed sitting upright with constant supervision, and test the temperature yourself before serving.')}</p>
     `;
     document.getElementById('overlay').classList.add('open');
+    /* Same focus handling as the food modal, and synchronous for the same
+       reason: the content is already rendered. */
+    const closeBtn = document.querySelector('#modal .close');
+    if(closeBtn) closeBtn.focus();
   }
 
   function init(){ buildFilters(); render(); }
@@ -4232,16 +4281,16 @@ const FirstAid = (function(){
     const el = document.getElementById('firstaid-body');
     if(!el) return;
 
-    let html = `<div class="emergency-banner">
+    let html = `<div class="mod-hero">
+      <h2>${Util.tt('ওয়াক তোলা বনাম দম আটকানো','Gagging vs Choking')}</h2>
+      <p>${Util.tt('এই দুটির পার্থক্য চেনা BLW বা যেকোনো পদ্ধতিতে সলিড শুরু করার আগে সবচেয়ে গুরুত্বপূর্ণ প্রস্তুতি। বেশিরভাগ বাবা-মা যেটিকে "দম আটকানো" ভেবে আতঙ্কিত হন, সেটি আসলে স্বাভাবিক ও নিরাপদ ওয়াক।','Telling these apart is the single most important preparation before starting solids, by any method. Most of what frightens parents as "choking" is in fact normal, protective gagging.')}</p>
+    </div>`;
+
+    html += `<div class="emergency-banner">
       <h3>🚨 ${Util.tt('জরুরি অবস্থায়','In an emergency')}</h3>
       <p>${Util.tt('বাচ্চা শব্দ করতে পারছে না, কাশতে পারছে না, বা মুখ নীলচে হয়ে যাচ্ছে — সাথে সাথে জরুরি সেবায় ফোন করুন এবং নিচের ধাপগুলো শুরু করুন।','If baby cannot make a sound, cannot cough, or is turning blue — call emergency services immediately and start the steps below.')}</p>
       <p style="margin-top:10px;"><b>${Util.tt('বাংলাদেশ জাতীয় জরুরি সেবা','Bangladesh national emergency service')}: 999</b> · ${Util.tt('স্বাস্থ্য বাতায়ন','Health hotline')}: 16263</p>
       <a class="hotline" href="tel:999">📞 ${Util.tt('৯৯৯-এ কল করুন','Call 999')}</a>
-    </div>`;
-
-    html += `<div class="mod-hero">
-      <h2>${Util.tt('ওয়াক তোলা বনাম দম আটকানো','Gagging vs Choking')}</h2>
-      <p>${Util.tt('এই দুটির পার্থক্য চেনা BLW বা যেকোনো পদ্ধতিতে সলিড শুরু করার আগে সবচেয়ে গুরুত্বপূর্ণ প্রস্তুতি। বেশিরভাগ বাবা-মা যেটিকে "দম আটকানো" ভেবে আতঙ্কিত হন, সেটি আসলে স্বাভাবিক ও নিরাপদ ওয়াক।','Telling these apart is the single most important preparation before starting solids, by any method. Most of what frightens parents as "choking" is in fact normal, protective gagging.')}</p>
     </div>`;
 
     html += `<div class="fa-compare">${col(GAG,'safe')}${col(CHOKE,'danger')}</div>`;
@@ -5303,7 +5352,7 @@ const Backup = (function(){
       ${total ? `<button class="v-btn ghost" style="color:var(--alert);" onclick="Backup.clearAll()">🗑 ${Util.tt('সব মুছুন','Erase all')}</button>` : ''}
     </div>`;
 
-    html += `<textarea id="bk-fallback" style="display:none;width:100%;height:120px;margin-top:12px;font-size:0.75rem;" readonly></textarea>`;
+    html += `<textarea id="bk-fallback" aria-label="${Util.tt('ব্যাকআপ ডেটা — কপি করে নিরাপদ জায়গায় রাখুন','Backup data — copy this somewhere safe')}" style="display:none;width:100%;height:120px;margin-top:12px;font-size:0.75rem;" readonly></textarea>`;
     html += `<div id="bk-flash" class="bk-flash" style="display:none;"></div>`;
 
     html += Util.accordion('🛡 ' + Util.tt('কখন তথ্য হারিয়ে যেতে পারে, আর কীভাবে বাঁচাবেন','When data can be lost, and how to protect it'),
@@ -6548,7 +6597,8 @@ const NutriCalc = (function(){
         'No weight given, so this uses the WHO median for this age ('+r.w+' kg). Entering the real weight makes it more accurate.')}</p>`;
     }
 
-    html += `<div class="v-grid wide">
+    html += `<h3 style="margin:22px 0 12px;">${Util.tt('বিস্তারিত','In detail')}</h3>
+    <div class="v-grid wide">
       <div class="v-card"><h4>🍚 ${Util.tt('খাবার বনাম দুধ','Food versus milk')}</h4>
         <div class="split-bar">
           <div class="sb milk" style="width:${Math.round(r.fromMilk/r.kcal*100)}%;">${Util.num(Math.round(r.fromMilk/r.kcal*100))}%</div>
@@ -7769,6 +7819,7 @@ const WeekPlan = (function(){
       Util.tt('মিল প্ল্যানারের সেটিংস অনুযায়ী','using your Meal Planner settings')}</p>`;
 
     /* week grid */
+    html += `<h3 style="margin:18px 0 12px;">${Util.tt('সাপ্তাহিক মেনু','The week\'s menu')}</h3>`;
     html += '<div class="wk-grid">';
     plan.days.forEach(function(day, i){
       html += `<div class="wk-day"><h4>${Util.t(DAYS[i % 7])}</h4>`;
@@ -7964,6 +8015,7 @@ const Tips = (function(){
     el.innerHTML = `<p class="v-muted" style="max-width:70ch;margin-bottom:18px;">${Util.tt(
       'কিছু খাবার একসাথে দিলে শরীর অনেক বেশি পুষ্টি শোষণ করে, আবার কিছু জুটি একে অপরকে বাধা দেয়। সবচেয়ে কাজের জুটিগুলো নিচে।',
       'Some foods eaten together let the body absorb far more; a few combinations work against each other. The ones that matter most are below.')}</p>
+      <h3 style="margin:0 0 12px;">${Util.tt('যেসব জুটি কাজে লাগে','Pairings that matter')}</h3>
       <div class="v-grid wide">${COMBOS.map(function(c){
         return `<div class="v-card"${c.good ? '' : ' style="border-color:#E8B9A8;background:#FDF4F0;"'}>
           <h4>${c.icon} ${Util.t(c.t)} ${c.good ? '<span class="chip leaf">✅</span>' : '<span class="chip alert">⚠️</span>'}</h4>
@@ -8314,11 +8366,55 @@ const RecentFoods = (function(){
   /* Close the modal with the overlay click / Escape handler already in
      the original code; we only need to drop the wide-modal class that the
      recipe view adds so the food-database modal keeps its own width. */
+  /* --- Modal accessibility -------------------------------------------
+     The overlay is a real dialog: it needs to announce itself, keep the
+     keyboard inside while open, and hand focus back to whatever opened it.
+     Without this a keyboard or screen-reader user tabs straight out of the
+     dialog into the page behind, which is still visible but inert. */
+  let lastFocused = null;
+
+  function focusables(){
+    return Array.from(document.querySelectorAll(
+      '#modal button, #modal a[href], #modal input, #modal select, #modal textarea, #modal [tabindex]:not([tabindex="-1"])'
+    )).filter(function(el){ return el.offsetParent !== null || el.getAttribute('tabindex') === '0'; });
+  }
+
+  const overlay = document.getElementById('overlay');
+  const modalEl = document.getElementById('modal');
+  if(overlay && modalEl){
+    overlay.setAttribute('role', 'presentation');
+    modalEl.setAttribute('role', 'dialog');
+    modalEl.setAttribute('aria-modal', 'true');
+    modalEl.setAttribute('tabindex', '-1');
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Tab' || !overlay.classList.contains('open')) return;
+      const f = focusables();
+      if(!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    });
+  }
+
+  const originalOpenModalForFocus = openModal;
+  openModal = function(f){
+    lastFocused = document.activeElement;
+    originalOpenModalForFocus(f);
+    /* Synchronous: the dialog's content is already in the DOM by this point,
+       so deferring would leave focus outside it for a frame. */
+    const m = document.getElementById('modal');
+    if(m) (focusables()[0] || m).focus();
+  };
+
   const originalCloseModal = closeModal;
   closeModal = function(){
     originalCloseModal();
     const m = document.getElementById('modal');
     if(m) m.classList.remove('lg');
+    /* Hand focus back so the keyboard does not jump to the top of the page. */
+    if(lastFocused && lastFocused.focus){ try{ lastFocused.focus(); }catch(e){} }
+    lastFocused = null;
   };
 
   /* --- 4. Plate wedges: make them real controls -----------------------
