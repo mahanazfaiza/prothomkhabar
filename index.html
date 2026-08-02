@@ -234,6 +234,49 @@
   .modal .row.warn .k{ color: var(--alert); }
   .modal .row p{ margin:0; color: var(--ink); }
 
+  /* ---------- Feedback button + panel ----------
+     Reuses the existing .overlay/.modal classes so it automatically
+     matches the app's current visual identity (colors, radius, shadow). */
+  .feedback-fab{
+    position: fixed; right: 18px; bottom: 18px; z-index: 90;
+    background: var(--mustard-deep); color:#fff; border:none; border-radius:999px;
+    padding: 13px 20px; font-family: 'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
+    font-weight:600; font-size:0.85rem; cursor:pointer; line-height:1;
+    box-shadow: 0 8px 20px -6px rgba(31,42,68,0.4);
+    display:flex; align-items:center; gap:6px; transition: transform .15s ease, background .15s ease;
+  }
+  .feedback-fab:hover{ transform: translateY(-2px); background:#8f5f0f; }
+  .feedback-fab:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+
+  .feedback-help{ color: var(--ink-soft); font-size:0.88rem; margin:2px 0 16px; }
+  .feedback-field{ margin-bottom:14px; }
+  .feedback-field label{
+    display:block; font-family:'Work Sans',sans-serif; font-size:0.72rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.06em; color: var(--leaf); margin-bottom:6px;
+  }
+  .feedback-field textarea, .feedback-field input{
+    width:100%; padding:10px 12px; border-radius:10px; border:1.5px solid var(--line);
+    font-family:'PK Bangla', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; font-size:0.92rem;
+    background: var(--paper); color: var(--ink); resize:vertical;
+  }
+  .feedback-field textarea:focus, .feedback-field input:focus{
+    outline:2px solid var(--mustard-deep); outline-offset:1px;
+  }
+  .feedback-submit{
+    width:100%; padding:12px; border-radius:10px; border:none; background: var(--leaf);
+    color:#fff; font-weight:600; cursor:pointer; font-family:'PK Bangla','Hind Siliguri',sans-serif;
+    font-size:0.95rem;
+  }
+  .feedback-submit:hover{ background:#234029; }
+  .feedback-thanks{
+    text-align:center; padding: 10px 0 4px; color: var(--leaf); font-weight:600;
+  }
+  .feedback-thanks .big{ font-size:2rem; display:block; margin-bottom:8px; }
+
+  @media (max-width: 820px){
+    .feedback-fab{ right:12px; bottom:12px; padding:12px 16px; font-size:0.78rem; }
+  }
+
   footer{
     padding: 40px 6vw; text-align:center; color: var(--ink-soft); font-size:0.85rem;
     border-top:1px solid var(--line); margin-top:20px;
@@ -1613,6 +1656,66 @@
 
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal" id="modal"></div>
+</div>
+
+<!-- ============ FEEDBACK FEATURE ============
+     Self-contained: its own floating button, its own overlay/modal pair
+     (separate IDs from the food-detail modal above), and its own JS
+     functions below. Does not touch tabs, search, or tracker code. -->
+<button id="feedback-fab" class="feedback-fab" onclick="openFeedback()">
+  <span lang-bn>💬 ভুল পেয়েছেন? পরামর্শ আছে?</span>
+  <span lang-en>💬 Found an error? Suggestion?</span>
+</button>
+
+<div class="overlay" id="feedback-overlay" onclick="if(event.target===this)closeFeedback()">
+  <div class="modal" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-title">
+    <button class="close" onclick="closeFeedback()" aria-label="Close">&times;</button>
+
+    <!-- Default (form) view -->
+    <div id="feedback-form-view">
+      <h3 id="feedback-title">
+        <span lang-bn>ভুল পেয়েছেন? পরামর্শ আছে?</span>
+        <span lang-en>Found an error? Have a suggestion?</span>
+      </h3>
+      <p class="feedback-help">
+        <span lang-bn>কোনো ভুল তথ্য, বাগ, বা নতুন খাবার/ফিচারের আইডিয়া থাকলে জানান — এটি আমাদের অ্যাপ আরও ভালো করতে সাহায্য করবে।</span>
+        <span lang-en>Spotted wrong info, a bug, or have an idea for a new food or feature? Let us know — it helps make the app better.</span>
+      </p>
+
+      <div class="feedback-field">
+        <label for="feedback-text">
+          <span lang-bn>আপনার মতামত</span><span lang-en>Your feedback</span>
+        </label>
+        <textarea id="feedback-text" rows="4" placeholder="যেমনঃ 'আপেলের জন্য বয়স ভুল দেখাচ্ছে' / e.g. 'The age shown for apple looks wrong'"></textarea>
+      </div>
+
+      <div class="feedback-field">
+        <label for="feedback-contact">
+          <span lang-bn>নাম বা ইমেইল (ঐচ্ছিক)</span><span lang-en>Name or email (optional)</span>
+        </label>
+        <input type="text" id="feedback-contact" placeholder="আপনার নাম/ইমেইল / Your name or email">
+      </div>
+
+      <button class="feedback-submit" onclick="submitFeedback()">
+        <span lang-bn>পাঠিয়ে দিন</span><span lang-en>Submit</span>
+      </button>
+    </div>
+
+    <!-- Thank-you view, shown after submit -->
+    <div id="feedback-thanks-view" style="display:none;">
+      <div class="feedback-thanks">
+        <span class="big">🙏</span>
+        <div>
+          <span lang-bn>মতামত দেওয়ার জন্য ধন্যবাদ!</span>
+          <span lang-en>Thank you for helping improve the app!</span>
+        </div>
+        <p class="feedback-help" style="margin-top:10px;">
+          <span lang-bn>আপনার মতামত পাঠানো হয়েছে। এটি ক্লিপবোর্ডেও কপি করা আছে, যদি আবার পাঠাতে চান তাহলে যেকোনো জায়গায় পেস্ট করতে পারবেন।</span>
+          <span lang-en>Your feedback has been sent. It's also been copied to your clipboard, so you can paste it elsewhere if you'd like to send it again.</span>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -11470,6 +11573,82 @@ const MealAdapt = (function(){
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
+
+/* ============ FEEDBACK FEATURE — JS ============
+   Self-contained: does not read or modify FOODS, state, tabs, search, or
+   tracker data. Uses its own overlay/modal ("feedback-overlay" /
+   "feedback-modal"), completely separate from the food-detail modal above. */
+
+/* Open the feedback panel, always starting on the form (not the thank-you) view. */
+function openFeedback(){
+  document.getElementById('feedback-form-view').style.display = 'block';
+  document.getElementById('feedback-thanks-view').style.display = 'none';
+  document.getElementById('feedback-overlay').classList.add('open');
+}
+
+function closeFeedback(){
+  document.getElementById('feedback-overlay').classList.remove('open');
+}
+
+/* Best-effort clipboard copy, used as a backup in case the mailto link
+   fails to open (e.g. no default mail client configured on the device). */
+function copyFeedbackToClipboard(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).catch(()=>{ /* silently ignore — mailto is the primary path */ });
+  }
+}
+
+function submitFeedback(){
+  const text = document.getElementById('feedback-text').value.trim();
+  const contact = document.getElementById('feedback-contact').value.trim();
+  if(!text) return; // nothing to send
+
+  // ---- Google Form destination ----
+  // 1. Create a form at forms.google.com with a paragraph field "Feedback"
+  //    and (optionally) a short-answer field "Name or email".
+  // 2. Menu (⋮) → "Get pre-filled link" → fill dummy answers in each field
+  //    → "Get link" → copy it. It looks like:
+  //      https://docs.google.com/forms/d/e/1FAIpQLSxxxxxxx/viewform?entry.111111111=test&entry.222222222=test
+  //    - GOOGLE_FORM_ID is the long ID between "/d/e/" and "/viewform".
+  //    - Each "entry.NNNNNNN" is a field ID — match them to the field you
+  //      typed the dummy answer into (order can vary, so check by field).
+  const GOOGLE_FORM_ID = '1FAIpQLSfJWNBXoNLHENKsCR0gP4e3k3_vuVZN_EIMGpzrnKxNUJd_cg';
+  const ENTRY_FEEDBACK = 'entry.180492287';
+  const ENTRY_CONTACT  = 'entry.1986941109';
+
+  const formData = new URLSearchParams();
+  formData.append(ENTRY_FEEDBACK, text);
+  if(contact) formData.append(ENTRY_CONTACT, contact);
+
+  const formUrl = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
+
+  // mode: 'no-cors' is required for Google Forms — it means we can't read
+  // the response (so we can't 100% confirm success), but the submission
+  // still goes through. This is the standard way to post to a Google Form
+  // from JavaScript without leaving the page or opening a new tab.
+  fetch(formUrl, { method: 'POST', mode: 'no-cors', body: formData })
+    .catch(()=>{ /* network error — the clipboard copy below is the backup */ });
+
+  // Copy as a backup in case GOOGLE_FORM_ID hasn't been filled in yet, or
+  // the device has no network connection at the moment of submitting.
+  copyFeedbackToClipboard(text + (contact ? ('\n\nFrom: ' + contact) : ''));
+
+  // Reset the form and show the thank-you view. Because of 'no-cors' we
+  // can't detect failure, so this always shows — matching the fire-and-
+  // forget nature of a simple feedback box.
+  document.getElementById('feedback-text').value = '';
+  document.getElementById('feedback-contact').value = '';
+  document.getElementById('feedback-form-view').style.display = 'none';
+  document.getElementById('feedback-thanks-view').style.display = 'block';
+}
+
+/* Own Escape-key handler, additive only — does not replace or wrap the
+   food-detail modal's existing listener. */
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && document.getElementById('feedback-overlay').classList.contains('open')){
+    closeFeedback();
+  }
+});
 
 </script>
 </body>
